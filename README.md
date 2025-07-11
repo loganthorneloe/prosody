@@ -2,14 +2,14 @@
 
 <div align="center">
 
-```
+<pre style="display: inline-block; text-align: center;">
     ____                            __     
    / __ \_________  _________  ____/ /_  __
   / /_/ / ___/ __ \/ ___/ __ \/ __  / / / /
  / ____/ /  / /_/ (__  ) /_/ / /_/ / /_/ / 
 /_/   /_/   \____/____/\____/\__,_/\__, /  
                                   /____/   
-```
+</pre>
 
 **🎙️ A local, free, and open source AI-powered dictation tool**
 
