@@ -1,0 +1,41 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prosody"
+version = "0.0.1"
+authors = [
+  { name="Logan Thorneloe", email="logan@thorneloe.com" },
+]
+description = "A Python tool for analyzing text."
+readme = "README.md"
+requires-python = ">=3.7"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = [
+    "sounddevice==0.4.7",
+    "numpy==1.26.4",
+    "pynput==1.7.7",
+    "faster_whisper==1.0.3",
+    "torch==2.3.1",
+    "transformers==4.41.2",
+    "accelerate==0.31.0",
+    "torch-directml==0.2.0.dev230426; sys_platform == 'win32'",
+    "intel-extension-for-pytorch==2.3.100; sys_platform == 'linux' or sys_platform == 'win32'",
+]
+
+[project.scripts]
+prosody = "prosody:main"
+
+[project.optional-dependencies]
+dev = ["pytest", "pyinstaller"]
+
+[tool.setuptools]
+py-modules = ["prosody"]
+
+[tool.pytest.ini_options]
+pythonpath = "."
