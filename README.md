@@ -13,8 +13,8 @@
 
 A lightweight, system-wide speech-to-text application (designed for Linux) that runs in the background and types transcribed text directly into any application.
 
-[![CI](https://github.com/yourusername/prosody/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/prosody/actions/workflows/test.yml)
-[![GitHub release](https://img.shields.io/github/release/yourusername/prosody.svg)](https://github.com/yourusername/prosody/releases)
+[![CI](https://github.com/loganthorneloe/prosody/actions/workflows/test.yml/badge.svg)](https://github.com/loganthorneloe/prosody/actions/workflows/test.yml)
+[![GitHub release](https://img.shields.io/github/release/loganthorneloe/prosody.svg)](https://github.com/loganthorneloe/prosody/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 ## What is Prosody?
@@ -70,11 +70,11 @@ When recording, you'll see a sleek waveform at the bottom of your screen that re
 
 ### Option 1: Debian/Ubuntu Package (Recommended)
 
-Download the latest `.deb` package from [releases](https://github.com/yourusername/prosody/releases/latest):
+Download the latest `.deb` package from [releases](https://github.com/loganthorneloe/prosody/releases/latest):
 
 ```bash
 # Download the latest release
-wget https://github.com/yourusername/prosody/releases/latest/download/prosody-stt_1.0.0-1_all.deb
+wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-stt_1.0.0-1_all.deb
 
 # Install
 sudo dpkg -i prosody-stt_1.0.0-1_all.deb
@@ -85,7 +85,7 @@ sudo apt-get install -f  # Install any missing dependencies
 
 ```bash
 # Clone the repository
-git clone https://github.com/yourusername/prosody.git
+git clone https://github.com/loganthorneloe/prosody.git
 cd prosody
 
 # Create virtual environment
@@ -125,7 +125,7 @@ We love contributions! Whether you're fixing bugs, adding features, or improving
 
 ```bash
 # Clone and setup
-git clone https://github.com/yourusername/prosody.git
+git clone https://github.com/loganthorneloe/prosody.git
 cd prosody
 python3 -m venv venv
 source venv/bin/activate
