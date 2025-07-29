@@ -20,10 +20,15 @@ override_dh_auto_install:
 	install -D -m 755 debian/prosody-wrapper debian/prosody-stt/usr/bin/prosody
 
 override_dh_python3:
-	dh_python3 --no-ext-rename
+	# Don't auto-generate Python dependencies since we handle them in wrapper
+	dh_python3 --no-ext-rename --no-guessing-deps
 
 override_dh_installchangelogs:
 	dh_installchangelogs
 
 override_dh_installdocs:
 	dh_installdocs README.md
+
+override_dh_shlibdeps:
+	# Skip automatic dependency generation
+	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
