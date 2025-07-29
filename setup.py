@@ -19,9 +19,9 @@ setup(
     description="A simple speech-to-text application for Linux",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="https://github.com/yourusername/prosody",
+    url="https://github.com/loganthorneloe/prosody",
     project_urls={
-        "Bug Tracker": "https://github.com/yourusername/prosody/issues",
+        "Bug Tracker": "https://github.com/loganthorneloe/prosody/issues",
     },
     classifiers=[
         "Development Status :: 4 - Beta",
@@ -44,9 +44,6 @@ setup(
             "prosody=prosody.main:main",
         ],
     },
-    data_files=[
-        ('share/applications', ['prosody.desktop']),
-    ],
     include_package_data=True,
     zip_safe=False,
 )
