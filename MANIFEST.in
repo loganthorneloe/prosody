@@ -1,0 +1,7 @@
+include README.md
+include LICENSE
+include CONTRIBUTING.md
+include requirements.txt
+include prosody.desktop
+recursive-include tests *.py
+recursive-include src *.py

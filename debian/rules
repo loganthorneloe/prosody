@@ -1,0 +1,23 @@
+#!/usr/bin/make -f
+
+export DH_VERBOSE = 1
+export PYBUILD_NAME=prosody-stt
+
+%:
+	dh $@ --with python3 --buildsystem=pybuild
+
+override_dh_auto_install:
+	dh_auto_install
+	# Install systemd user service
+	install -D -m 644 prosody.service debian/prosody-stt/usr/lib/systemd/user/prosody.service
+	# Create wrapper script that ensures dependencies
+	install -D -m 755 debian/prosody-wrapper debian/prosody-stt/usr/bin/prosody
+
+override_dh_python3:
+	dh_python3 --no-ext-rename
+
+override_dh_installchangelogs:
+	dh_installchangelogs
+
+override_dh_installdocs:
+	dh_installdocs README.md
