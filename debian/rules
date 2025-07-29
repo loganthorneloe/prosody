@@ -32,3 +32,9 @@ override_dh_installdocs:
 override_dh_shlibdeps:
 	# Skip automatic dependency generation
 	dh_shlibdeps --dpkg-shlibdeps-params=--ignore-missing-info
+
+override_dh_gencontrol:
+	# Override the python3:Depends substitution variable
+	echo "python3:Depends=python3:any" >> debian/prosody-stt.substvars
+	echo "misc:Depends=" >> debian/prosody-stt.substvars
+	dh_gencontrol
