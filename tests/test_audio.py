@@ -31,8 +31,13 @@ class TestAudioRecorder(unittest.TestCase):
         self.assertEqual(recorder.samplerate, 44100)
         self.assertEqual(recorder.channels, 2)
 
-    def test_audio_callback(self):
+    @patch("sounddevice.InputStream")
+    def test_audio_callback(self, mock_stream_class):
         """Test audio callback function."""
+        # Mock the stream
+        mock_stream = Mock()
+        mock_stream_class.return_value = mock_stream
+        
         # Create test audio data
         test_audio = np.random.randn(1024, 1).astype(np.float32) * 0.1
 
