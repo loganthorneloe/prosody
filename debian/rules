@@ -6,6 +6,10 @@ export PYBUILD_NAME=prosody-stt
 %:
 	dh $@ --with python3 --buildsystem=pybuild
 
+override_dh_auto_test:
+	# Skip tests during package building as they require special environment setup
+	@echo "Skipping tests during Debian package build"
+
 override_dh_auto_install:
 	dh_auto_install
 	# Install systemd user service
