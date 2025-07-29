@@ -20,7 +20,9 @@ if [ ! -f "$FIRST_RUN_FLAG" ]; then
     # Install Whisper and dependencies in venv
     echo "Installing speech recognition dependencies..."
     "$VENV_DIR/bin/pip" install --upgrade pip wheel
-    "$VENV_DIR/bin/pip" install openai-whisper torch torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
+    
+    # Install all required dependencies
+    "$VENV_DIR/bin/pip" install numpy sounddevice pynput openai-whisper torch torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
     
     # Create first run flag
     touch "$FIRST_RUN_FLAG"
