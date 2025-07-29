@@ -1,199 +1,235 @@
+<div align="center">
+
+```
+    ____                            __     
+   / __ \_________  _________  ____/ /_  __
+  / /_/ / ___/ __ \/ ___/ __ \/ __  / / / /
+ / ____/ /  / /_/ (__  ) /_/ / /_/ / /_/ / 
+/_/   /_/   \____/____/\____/\__,_/\__, /  
+                                  /____/   
+```
+
+</div>
+
 # Prosody
 
-A simple, lightweight speech-to-text application for Linux that runs in the background and transcribes your speech on demand.
+A lightweight, system-wide speech-to-text application (designed for Linux) that runs in the background and types transcribed text directly into any application.
 
-## Description
+[![CI](https://github.com/yourusername/prosody/actions/workflows/test.yml/badge.svg)](https://github.com/yourusername/prosody/actions/workflows/test.yml)
+[![GitHub release](https://img.shields.io/github/release/yourusername/prosody.svg)](https://github.com/yourusername/prosody/releases)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-Prosody is a minimalist speech-to-text application that uses OpenAI's Whisper models for accurate transcription. It runs unobtrusively in the background and activates with a simple hotkey, making it perfect for quick voice input in any application.
+## What is Prosody?
 
-## Features
+Prosody is your personal voice-to-text assistant that lives quietly in the background. With a simple double-tap of the Ctrl key, speak naturally and watch your words appear wherever you're typing - in emails, documents, chat messages, or code editors. No need to switch windows or click buttons. Just speak and type!
 
-- **Hotkey activation**: Double-tap Left Ctrl to start/stop recording
-- **Visual indicator**: Clear on-screen indicator when recording is active
-- **Menu bar icon**: System tray icon for easy access and application control
-- **Auto-transcription**: Automatically types the transcribed text into your active window
-- **Lightweight**: Minimal resource usage with efficient Whisper model
+### Why Prosody?
+
+- **Works Everywhere**: Types directly into any application - browsers, editors, terminals, chat apps
+- **Privacy First**: Runs locally on your machine, no cloud services required
+- **Lightweight**: Minimal CPU and memory usage, no bloated GUI
+- **Fast**: Instant transcription with OpenAI's Whisper model
+- **Simple**: Just one hotkey to remember - double-tap Ctrl
+- **Open Source**: Powered by OpenAI Whisper (base.en model)
+
+### Key Features
+
+- 🎤 **Global Hotkey**: Double-tap Left Ctrl to start/stop recording
+- 🚫 **Cancel Recording**: Double-tap Escape to cancel without transcribing
+- 📊 **Visual Feedback**: Elegant waveform indicator shows recording status
+- ⌨️ **Direct Typing**: Transcribed text is automatically typed at cursor position
+- 🚀 **Lightweight**: Runs quietly in background with minimal resource usage
+- 🤖 **Powered by Whisper**: Uses OpenAI's Whisper model for accurate transcription
+
+### How It Works
+
+Prosody uses:
+- **OpenAI Whisper** (base.en model, ~140MB) for speech recognition
+- **pynput** for global hotkey detection across all applications
+- **sounddevice** for low-latency audio recording
+- **tkinter** for the minimal waveform visualization
+
+The app runs as a background service, listening for your hotkey. When you double-tap Ctrl, it records audio, sends it to Whisper for transcription, and types the result wherever your cursor is positioned.
+
+## How to Use Prosody
+
+### Quick Start
+1. Place cursor where you want text (Prosody starts automatically on boot)
+2. Double-tap **Left Ctrl** to start recording 🎤
+3. Speak naturally
+4. Double-tap **Left Ctrl** again to transcribe
+5. Your words appear instantly!
+
+### Controls
+- **Double-tap Left Ctrl**: Start/stop recording and transcribe
+- **Double-tap Escape**: Cancel current recording (no text output)
+- **Ctrl+C** (in terminal): Quit Prosody
+
+### Visual Indicator
+When recording, you'll see a sleek waveform at the bottom of your screen that responds to your voice. No intrusive windows or system tray icons!
 
 ## Installation
 
-### Quick Install (Debian/Ubuntu)
+### Option 1: Debian/Ubuntu Package (Recommended)
 
-For Debian-based systems, you can install Prosody using our pre-built package:
+Download the latest `.deb` package from [releases](https://github.com/yourusername/prosody/releases/latest):
 
 ```bash
-sudo apt install ./prosody_1.0.0_amd64.deb
+# Download the latest release
+wget https://github.com/yourusername/prosody/releases/latest/download/prosody-stt_1.0.0-1_all.deb
+
+# Install
+sudo dpkg -i prosody-stt_1.0.0-1_all.deb
+sudo apt-get install -f  # Install any missing dependencies
 ```
 
-### Install from PyPI
+### Option 2: From Source
 
 ```bash
-pip install prosody-stt
-```
-
-### Install from Source
-
-```bash
+# Clone the repository
 git clone https://github.com/yourusername/prosody.git
 cd prosody
+
+# Create virtual environment
+python3 -m venv venv
+source venv/bin/activate
+
+# Install
+pip install -r requirements.txt
 pip install -e .
 ```
 
-## Usage
+### First Run
 
-1. Start Prosody:
-   ```bash
-   prosody
-   ```
+On first run, Prosody will download the Whisper model (~140MB). This only happens once and is stored in `~/.local/share/prosody/`.
 
-2. The application will run in the background with an icon in your system tray
+### Auto-Start
 
-3. To record and transcribe:
-   - Double-tap the Left Ctrl key to start recording
-   - Speak your text
-   - Double-tap Left Ctrl again to stop recording
-   - The transcribed text will be automatically typed at your cursor position
+**The .deb package automatically enables startup on login!** No configuration needed.
 
-4. To quit: Right-click the system tray icon and select "Quit"
-
-### Controlling Prosody
-
-Prosody runs in the background without a tray icon. Control it using:
-
-#### Keyboard Shortcuts:
-- **Double-tap Ctrl**: Start/stop recording
-- **Ctrl+Shift+P**: Open control menu
-
-#### Command Line:
+To manage the service:
 ```bash
-prosody-control status    # Check if running
-prosody-control pause     # Pause recording
-prosody-control resume    # Resume recording  
-prosody-control quit      # Stop Prosody
+# Check if running
+systemctl --user status prosody
+
+# Stop temporarily
+systemctl --user stop prosody
+
+# Disable auto-start
+systemctl --user disable prosody
 ```
 
-### Running at Startup
+## Contributing to Prosody
 
-#### Option 1: Systemd User Service (Recommended)
+We love contributions! Whether you're fixing bugs, adding features, or improving documentation, we'd love your help making Prosody better.
+
+### Quick Start
+
 ```bash
-# Install the service file
-mkdir -p ~/.config/systemd/user
-cp prosody.service ~/.config/systemd/user/
+# Clone and setup
+git clone https://github.com/yourusername/prosody.git
+cd prosody
+python3 -m venv venv
+source venv/bin/activate
 
-# Enable autostart
-systemctl --user enable prosody.service
-systemctl --user start prosody.service
+# Install in development mode
+pip install -r requirements.txt
+pip install -e .
 
-# Check status
-systemctl --user status prosody.service
+# Run tests
+pip install -r requirements-test.txt
+pytest
 ```
-
-#### Option 2: Desktop Autostart
-```bash
-# Create autostart entry
-mkdir -p ~/.config/autostart
-cat > ~/.config/autostart/prosody.desktop << EOF
-[Desktop Entry]
-Type=Application
-Name=Prosody
-Exec=python3 -m prosody
-Hidden=false
-X-GNOME-Autostart-enabled=true
-EOF
-```
-
-## Development
-
-### Setting up the Development Environment
-
-1. Clone the repository:
-   ```bash
-   git clone https://github.com/yourusername/prosody.git
-   cd prosody
-   ```
-
-2. Create a virtual environment:
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows: venv\Scripts\activate
-   ```
-
-3. Install dependencies:
-   ```bash
-   # Option 1: Install minimal requirements first (recommended for testing)
-   pip install -r requirements-minimal.txt
-   
-   # Then install Whisper separately (this downloads large models)
-   pip install openai-whisper
-   
-   # Option 2: Install all at once (may timeout on slow connections)
-   pip install -r requirements.txt --timeout 1000
-   ```
-
-4. Run from source:
-   ```bash
-   python -m prosody
-   ```
 
 ### Project Structure
 
 ```
 prosody/
-├── src/
-│   └── prosody/
-│       ├── __init__.py
-│       ├── main.py          # Main application entry point
-│       ├── hotkey.py        # Hotkey listener logic
-│       ├── audio.py         # Audio recording logic
-│       ├── transcription.py # Whisper model interaction
-│       └── ui.py            # Menu bar icon and recording indicator
-├── tests/
-│   ├── __init__.py
-│   ├── test_hotkey.py
-│   └── test_transcription.py
-├── setup.py
-├── requirements.txt
-├── README.md
-├── CONTRIBUTING.md
-└── LICENSE
+├── src/prosody/
+│   ├── main.py          # Application entry point
+│   ├── audio.py         # Audio recording
+│   ├── hotkey.py        # Global hotkey detection
+│   ├── transcription.py # Whisper integration
+│   └── ui_polished.py   # Visual indicators
+├── tests/               # Test suite
+├── debian/              # Debian packaging
+├── .github/workflows/   # CI/CD automation
+└── build-deb.sh        # Build Debian package
 ```
 
-### Building a Debian Package
+### Testing
 
-To create a `.deb` package for easy distribution:
+```bash
+# Run all tests
+pytest
 
-1. Install fpm (Effing Package Management):
-   ```bash
-   gem install fpm
-   ```
+# Run with coverage
+pytest --cov=src/prosody
 
-2. Build the package:
-   ```bash
-   python setup.py sdist
-   fpm -s python -t deb \
-       --python-bin python3 \
-       --python-package-name-prefix python3 \
-       --python-install-bin /usr/local/bin \
-       --after-install scripts/postinst.sh \
-       --depends python3-pip \
-       --depends python3-dev \
-       --depends portaudio19-dev \
-       setup.py
-   ```
+# Test the Debian package
+./test-deb-install.sh
+```
 
-### Manual Testing
+### Building Debian Package
 
-To verify full functionality:
+```bash
+# Build the package
+./build-deb.sh
 
-1. **Test hotkey detection**: Run the app and double-tap Left Ctrl - the recording indicator should appear
-2. **Test recording**: Speak while the indicator is visible, then double-tap Left Ctrl again
-3. **Test transcription**: Verify that the spoken text appears at your cursor position
-4. **Test system tray**: Right-click the tray icon and test the menu options
-5. **Test persistence**: Ensure the app continues running after closing other applications
+# Package will be in dist/
+ls dist/*.deb
+```
 
-## Contributing
+### Making a Release
 
-We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for guidelines on how to submit issues, feature requests, and pull requests.
+Releases are automated via GitHub Actions:
+
+```bash
+# Tag and push to trigger release
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
+
+# GitHub Actions will:
+# 1. Run tests
+# 2. Build .deb package
+# 3. Create GitHub release
+# 4. Attach .deb file
+```
+
+
+## Troubleshooting
+
+### No audio recording
+- Check microphone permissions
+- Ensure PulseAudio/PipeWire is running
+- Try: `python -m sounddevice`
+
+### Hotkeys not working
+- Some applications may capture Ctrl key
+- Try running with sudo (not recommended for regular use)
+- Check if another app is using the same hotkey
+
+### Model download fails
+- Check internet connection
+- Manually download: `python -c "import whisper; whisper.load_model('base.en')"`
+
+### How to Contribute
+
+See our [CONTRIBUTING.md](CONTRIBUTING.md) for detailed guidelines. Here's the quick version:
+
+1. Fork the repo
+2. Create a feature branch
+3. Make your changes with tests
+4. Submit a pull request
+
+All contributions are welcome - code, documentation, bug reports, or feature ideas!
 
 ## License
 
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+MIT License - see [LICENSE](LICENSE) for details.
+
+## Acknowledgments
+
+- Built with [OpenAI Whisper](https://github.com/openai/whisper)
+- Hotkey detection via [pynput](https://github.com/moses-palmer/pynput)
+- Audio recording with [sounddevice](https://github.com/spatialaudio/python-sounddevice)

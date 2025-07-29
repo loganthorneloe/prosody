@@ -44,11 +44,40 @@ Feature requests are welcome! Please create an issue with:
 
 ### Development Setup
 
-1. Fork and clone the repository
-2. Create a virtual environment: `python -m venv venv`
-3. Activate it: `source venv/bin/activate` (Linux/Mac) or `venv\Scripts\activate` (Windows)
-4. Install dependencies: `pip install -r requirements.txt`
-5. Install in development mode: `pip install -e .`
+1. **Fork and clone the repository**
+   ```bash
+   git clone https://github.com/yourusername/prosody.git
+   cd prosody
+   ```
+
+2. **Create a virtual environment**
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # Linux/Mac
+   # or
+   venv\Scripts\activate     # Windows
+   ```
+
+3. **Install dependencies**
+   ```bash
+   # Core dependencies
+   pip install -r requirements.txt
+   
+   # Development dependencies
+   pip install -r requirements-test.txt
+   
+   # Install in editable mode
+   pip install -e .
+   ```
+
+4. **Verify installation**
+   ```bash
+   # Run tests
+   pytest
+   
+   # Try the app
+   prosody
+   ```
 
 ### Running Tests
 
@@ -78,6 +107,51 @@ pytest -n auto
 - Welcome newcomers and help them get started
 - Focus on constructive criticism
 - Respect differing viewpoints and experiences
+
+### Testing Your Changes
+
+Before submitting a PR:
+
+1. **Run the test suite**
+   ```bash
+   pytest
+   ```
+
+2. **Check code coverage**
+   ```bash
+   pytest --cov=src/prosody
+   ```
+
+3. **Test the Debian package** (if applicable)
+   ```bash
+   ./test-deb-install.sh
+   ```
+
+4. **Manual testing**
+   - Test hotkey functionality
+   - Verify recording and transcription
+   - Check the visual indicator
+   - Test cancellation with double Escape
+
+### CI/CD
+
+All pull requests automatically trigger:
+- Tests on Ubuntu and macOS
+- Multiple Python versions (3.8-3.11)
+- Code coverage checks
+- Debian package building
+
+### Making a Release
+
+If you're a maintainer:
+
+1. **Update version in setup.py**
+2. **Create and push a tag**
+   ```bash
+   git tag -a v1.0.0 -m "Release version 1.0.0"
+   git push origin v1.0.0
+   ```
+3. GitHub Actions automatically creates the release
 
 ## Questions?
 

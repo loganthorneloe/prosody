@@ -16,16 +16,29 @@ case "$1" in
         # Install Python package in system
         pip3 install --system /usr/share/prosody-stt/ || true
         
+        # Enable auto-start for all users
+        echo "Enabling auto-start for Prosody..."
+        
+        # Create systemd user service directory if it doesn't exist
+        mkdir -p /etc/systemd/user/
+        
+        # Copy service file to system location
+        cp /usr/share/prosody-stt/prosody.service /etc/systemd/user/prosody.service || true
+        
+        # Reload systemd
+        systemctl --user daemon-reload || true
+        
         echo ""
-        echo "Prosody has been installed!"
-        echo ""
-        echo "To start Prosody:"
-        echo "  - Run: prosody"
-        echo "  - Or enable auto-start: systemctl --user enable prosody"
+        echo "✓ Prosody has been installed and will start automatically on login!"
         echo ""
         echo "Usage:"
         echo "  - Double-tap Ctrl to start/stop recording"
         echo "  - Double-tap Escape to cancel recording"
+        echo ""
+        echo "To manage Prosody:"
+        echo "  - Check status: systemctl --user status prosody"
+        echo "  - Stop: systemctl --user stop prosody"
+        echo "  - Disable auto-start: systemctl --user disable prosody"
         echo ""
         echo "Note: First run will download the Whisper model (~140MB)"
         ;;
