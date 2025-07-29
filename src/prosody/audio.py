@@ -9,10 +9,10 @@ from typing import Optional, Tuple
 
 class AudioRecorder:
     """Handles audio recording from the default microphone."""
-    
+
     def __init__(self, samplerate: int = 16000, channels: int = 1):
         """Initialize the audio recorder.
-        
+
         Args:
             samplerate: Sample rate for recording (default 16000 Hz for Whisper)
             channels: Number of channels (default 1 for mono)
@@ -24,63 +24,63 @@ class AudioRecorder:
         self.stream: Optional[sd.InputStream] = None
         self._lock = threading.Lock()
         self.current_level = 0.0
-        
+
     def _audio_callback(self, indata, frames, time, status):
         """Callback function for audio stream."""
         if status:
             print(f"Audio recording status: {status}")
-        
+
         # Copy audio data to queue
         if self.recording:
             self.audio_queue.put(indata.copy())
             # Calculate current audio level (RMS)
             self.current_level = float(np.sqrt(np.mean(indata**2)))
-    
+
     def start_recording(self) -> None:
         """Start recording audio from the default microphone."""
         with self._lock:
             if self.recording:
                 return
-                
+
             # Clear any existing data in the queue
             while not self.audio_queue.empty():
                 try:
                     self.audio_queue.get_nowait()
                 except queue.Empty:
                     break
-            
+
             try:
                 # Create and start the audio stream
                 self.stream = sd.InputStream(
                     samplerate=self.samplerate,
                     channels=self.channels,
                     callback=self._audio_callback,
-                    dtype=np.float32
+                    dtype=np.float32,
                 )
                 self.stream.start()
                 self.recording = True
             except Exception as e:
                 raise RuntimeError(f"Failed to start audio recording: {e}")
-    
+
     def stop_recording(self) -> np.ndarray:
         """Stop recording and return the recorded audio data.
-        
+
         Returns:
             NumPy array containing the recorded audio
         """
         with self._lock:
             if not self.recording:
                 return np.array([], dtype=np.float32)
-            
+
             self.recording = False
             self.current_level = 0.0
-            
+
             # Stop and close the stream
             if self.stream:
                 self.stream.stop()
                 self.stream.close()
                 self.stream = None
-            
+
             # Collect all audio data from the queue
             audio_chunks = []
             while not self.audio_queue.empty():
@@ -88,7 +88,7 @@ class AudioRecorder:
                     audio_chunks.append(self.audio_queue.get_nowait())
                 except queue.Empty:
                     break
-            
+
             # Concatenate all audio chunks
             if audio_chunks:
                 audio_data = np.concatenate(audio_chunks, axis=0)
@@ -98,34 +98,36 @@ class AudioRecorder:
                 return audio_data
             else:
                 return np.array([], dtype=np.float32)
-    
+
     def get_current_level(self) -> float:
         """Get the current audio level (0.0 to 1.0).
-        
+
         Returns:
             Current audio level as a float between 0 and 1
         """
         return min(1.0, self.current_level * 10)  # Scale up and clamp to 0-1
-    
+
     def get_available_devices(self) -> list:
         """Get list of available audio input devices.
-        
+
         Returns:
             List of device information dictionaries
         """
         devices = sd.query_devices()
         input_devices = []
-        
+
         for i, device in enumerate(devices):
-            if device['max_input_channels'] > 0:
-                input_devices.append({
-                    'index': i,
-                    'name': device['name'],
-                    'channels': device['max_input_channels']
-                })
-        
+            if device["max_input_channels"] > 0:
+                input_devices.append(
+                    {
+                        "index": i,
+                        "name": device["name"],
+                        "channels": device["max_input_channels"],
+                    }
+                )
+
         return input_devices
-    
+
     def __del__(self):
         """Cleanup when the recorder is destroyed."""
         if self.stream:
