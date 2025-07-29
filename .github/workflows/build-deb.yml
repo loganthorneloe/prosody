@@ -1,0 +1,67 @@
+name: Build Debian Package
+
+on:
+  push:
+    branches: [ main, develop ]
+    paths:
+      - 'src/**'
+      - 'debian/**'
+      - 'setup.py'
+      - 'requirements.txt'
+      - 'build-deb.sh'
+  pull_request:
+    branches: [ main ]
+    paths:
+      - 'src/**'
+      - 'debian/**'
+      - 'setup.py'
+      - 'requirements.txt'
+      - 'build-deb.sh'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.10'
+        
+    - name: Install build dependencies
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y build-essential debhelper dh-python python3-all python3-setuptools
+        
+    - name: Build Debian package
+      run: |
+        chmod +x build-deb.sh
+        ./build-deb.sh
+        
+    - name: Display package info
+      run: |
+        echo "=== Package Info ==="
+        dpkg-deb -I dist/*.deb
+        echo
+        echo "=== Package Contents ==="
+        dpkg-deb -c dist/*.deb
+        
+    - name: Test package installation
+      run: |
+        # Create a test environment
+        sudo dpkg -i dist/*.deb || true
+        sudo apt-get install -f -y
+        
+        # Verify installation
+        which prosody
+        prosody --version || echo "Version check not implemented"
+        
+    - name: Upload package
+      uses: actions/upload-artifact@v3
+      with:
+        name: prosody-deb-${{ github.sha }}
+        path: dist/*.deb
+        retention-days: 7
