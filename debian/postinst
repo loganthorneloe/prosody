@@ -25,21 +25,25 @@ case "$1" in
         # Copy service file to system location
         cp /usr/share/prosody-stt/prosody.service /etc/systemd/user/prosody.service || true
         
-        # For the user running the install, enable and start the service
+        # Copy service file to user's systemd directory for auto-start
         if [ -n "$SUDO_USER" ]; then
-            # Running under sudo, enable for the actual user
-            su - "$SUDO_USER" -c "systemctl --user daemon-reload" || true
-            su - "$SUDO_USER" -c "systemctl --user enable prosody.service" || true
-            su - "$SUDO_USER" -c "systemctl --user start prosody.service" || true
-        else
-            # Not under sudo, enable for current user
-            systemctl --user daemon-reload || true
-            systemctl --user enable prosody.service || true
-            systemctl --user start prosody.service || true
+            USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
+            mkdir -p "$USER_HOME/.config/systemd/user/"
+            cp /usr/share/prosody-stt/prosody.service "$USER_HOME/.config/systemd/user/" || true
+            chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME/.config/systemd/user/prosody.service" || true
+            
+            # Create a flag file to enable on first login
+            mkdir -p "$USER_HOME/.config/prosody/"
+            touch "$USER_HOME/.config/prosody/.enable-on-login"
+            chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME/.config/prosody/" || true
         fi
         
         echo ""
-        echo "✓ Prosody has been installed and is now running!"
+        echo "✓ Prosody has been installed!"
+        echo ""
+        echo "To start using Prosody:"
+        echo "  1. Run 'prosody' to start it now, OR"
+        echo "  2. Log out and back in (it will auto-start)"
         echo ""
         echo "Usage:"
         echo "  - Double-tap Ctrl to start/stop recording"

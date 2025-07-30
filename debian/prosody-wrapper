@@ -2,11 +2,19 @@
 # Wrapper script for Prosody that ensures Whisper dependencies are installed
 
 FIRST_RUN_FLAG="$HOME/.config/prosody/.first_run_complete"
+ENABLE_FLAG="$HOME/.config/prosody/.enable-on-login"
 VENV_DIR="$HOME/.local/share/prosody/venv"
 
 # Create config directory
 mkdir -p "$HOME/.config/prosody"
 mkdir -p "$HOME/.local/share/prosody"
+
+# Enable service on first login if flag exists
+if [ -f "$ENABLE_FLAG" ]; then
+    systemctl --user daemon-reload 2>/dev/null || true
+    systemctl --user enable prosody.service 2>/dev/null || true
+    rm -f "$ENABLE_FLAG"
+fi
 
 # Check if this is first run
 if [ ! -f "$FIRST_RUN_FLAG" ]; then
