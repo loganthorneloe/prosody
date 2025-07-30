@@ -44,6 +44,9 @@ setup(
             "prosody=prosody.main:main",
         ],
     },
+    data_files=[
+        ('share/applications', ['prosody.desktop']),
+    ],
     include_package_data=True,
     zip_safe=False,
 )

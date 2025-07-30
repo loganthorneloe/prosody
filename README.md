@@ -26,7 +26,7 @@ sudo dpkg -i prosody-stt_1.0.0-1_all.deb
 sudo apt-get install -f
 ```
 
-**That's it!** Prosody starts automatically. You'll see a notification when it's ready.
+**That's it!** Find "Prosody Speech-to-Text" in your application menu and click to start!
 
 ### 🎤 How to Use
 1. Click where you want to type
@@ -94,10 +94,10 @@ pip install -e .
 ```
 
 **What happens after installation:**
-- ✅ Prosody starts immediately (you'll see a notification)
-- ✅ Auto-starts on every login
+- 🚀 Launch from your application menu (search "Prosody")
+- ✅ Auto-starts on every login after first launch
 - ⬇️ First use downloads Whisper model (~140MB, one-time)
-- 🚀 No configuration needed!
+- 🔔 Shows notification when ready
 
 To manage the service:
 ```bash
