@@ -13,7 +13,13 @@ override_dh_auto_test:
 override_dh_auto_install:
 	dh_auto_install
 	# Build the self-contained bundle
-	./build-bundle.sh
+	@echo "Building self-contained bundle..."
+	./build-bundle.sh || (echo "build-bundle.sh failed!" && exit 1)
+	# Verify bundle was created
+	@if [ ! -d "debian/prosody-bundle/opt/prosody/venv" ]; then \
+		echo "ERROR: Bundle not created! Missing debian/prosody-bundle/opt/prosody/venv"; \
+		exit 1; \
+	fi
 	# Copy the entire bundle
 	cp -r debian/prosody-bundle/opt debian/prosody-stt/
 	# Install systemd user service

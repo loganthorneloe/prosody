@@ -23,7 +23,7 @@ pip install --upgrade pip wheel
 pip install numpy sounddevice pynput openai-whisper torch torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
 
 # Install prosody itself into the venv
-pip install -e .
+pip install .
 
 # Deactivate venv
 deactivate
