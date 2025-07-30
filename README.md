@@ -30,6 +30,8 @@ sudo apt-get install -f
 
 *Note: First launch installs dependencies (~2GB) - you'll see progress notifications.*
 
+**Prosody runs silently in the background** - no windows, no terminal, just notifications when starting.
+
 ### 🎤 How to Use
 1. Click where you want to type
 2. **Double-tap Left Ctrl** to start recording
@@ -47,7 +49,7 @@ Prosody is your personal voice-to-text assistant that lives quietly in the backg
 
 - **Works Everywhere**: Types directly into any application - browsers, editors, terminals, chat apps
 - **Privacy First**: Runs locally on your machine, no cloud services required
-- **Lightweight**: Minimal CPU and memory usage, no bloated GUI
+- **Silent & Lightweight**: Runs invisibly in background, minimal CPU/memory usage
 - **Fast**: Instant transcription with OpenAI's Whisper model
 - **Simple**: Just one hotkey to remember - double-tap Ctrl
 - **Auto-starts**: Runs automatically on every login (after first launch)
