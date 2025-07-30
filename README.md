@@ -28,8 +28,7 @@ sudo apt-get install -f
 
 Then run:
 ```bash
-prosody                              # Start Prosody
-systemctl --user enable prosody      # Enable auto-start on login
+prosody    # Start Prosody (auto-start is already enabled)
 ```
 
 **Prosody runs silently in the background** - completely self-contained.
@@ -100,8 +99,8 @@ pip install -e .
 ```
 
 **What happens after installation:**
-- 🚀 Run `prosody` to start
-- ✅ Enable auto-start with `systemctl --user enable prosody`
+- ✅ Auto-start enabled automatically
+- 🚀 Run `prosody` to start immediately
 - 📦 Everything bundled - instant startup
 - 🔔 Shows notification when ready
 
