@@ -1,23 +1,21 @@
 # Prosody Quick Start Guide
 
-## Installation (5 minutes)
-
-### For Users - Install from Release
+## 🚀 Installation (2 minutes)
 
 ```bash
-# Download latest .deb from GitHub releases
-wget https://github.com/yourusername/prosody/releases/latest/download/prosody-stt_1.0.0-1_all.deb
-
-# Install it
+# Download and install
+wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-stt_1.0.0-1_all.deb
 sudo dpkg -i prosody-stt_1.0.0-1_all.deb
 sudo apt-get install -f
 ```
+
+**That's it!** Prosody starts automatically. Look for the notification!
 
 ### For Developers - Install from Source
 
 ```bash
 # Clone
-git clone https://github.com/yourusername/prosody.git
+git clone https://github.com/loganthorneloe/prosody.git
 cd prosody
 
 # Setup virtual environment
@@ -29,25 +27,12 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-## First Run (2 minutes)
+## ✨ First Use
 
-1. **Start Prosody**
-   ```bash
-   prosody
-   ```
-   
-2. **Wait for model download** (first time only, ~140MB)
-   ```
-   Loading Whisper model 'base.en'...
-   Model loaded successfully
-   Prosody is starting...
-   ```
-
-3. **You'll see:**
-   ```
-   Double-tap Left Ctrl to start/stop recording
-   Double-tap Escape to cancel recording
-   ```
+**No need to start anything!** After installation:
+- Prosody is already running (check notification area)
+- First recording triggers Whisper model download (~140MB)
+- Takes about 1 minute on first use only
 
 ## Using Prosody (30 seconds)
 
@@ -66,7 +51,7 @@ pip install -e .
 - **Best results:** Speak clearly, moderate pace
 - **Punctuation:** Say "period", "comma", "question mark"
 - **Multiple languages:** Edit `transcription.py` to use multilingual model
-- **Auto-start:** Run `systemctl --user enable prosody`
+- **Already auto-starts!** No configuration needed
 
 ## Troubleshooting
 
@@ -86,4 +71,4 @@ pip install -e .
 
 - Read full [README.md](README.md) for advanced usage
 - Check [CONTRIBUTING.md](CONTRIBUTING.md) to contribute
-- Report issues on [GitHub Issues](https://github.com/yourusername/prosody/issues)
+- Report issues on [GitHub Issues](https://github.com/loganthorneloe/prosody/issues)

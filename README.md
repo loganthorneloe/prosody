@@ -17,6 +17,26 @@ A lightweight, system-wide speech-to-text application (designed for Linux) that 
 [![GitHub release](https://img.shields.io/github/release/loganthorneloe/prosody.svg)](https://github.com/loganthorneloe/prosody/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
+## 🚀 Quick Start
+
+```bash
+# Download and install (Ubuntu/Debian)
+wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-stt_1.0.0-1_all.deb
+sudo dpkg -i prosody-stt_1.0.0-1_all.deb
+sudo apt-get install -f
+```
+
+**That's it!** Prosody starts automatically. You'll see a notification when it's ready.
+
+### 🎤 How to Use
+1. Click where you want to type
+2. **Double-tap Left Ctrl** to start recording
+3. Speak naturally
+4. **Double-tap Left Ctrl** again to transcribe
+5. Your words appear instantly!
+
+**Pro tip:** Double-tap Escape to cancel recording without transcribing.
+
 ## What is Prosody?
 
 Prosody is your personal voice-to-text assistant that lives quietly in the background. With a simple double-tap of the Ctrl key, speak naturally and watch your words appear wherever you're typing - in emails, documents, chat messages, or code editors. No need to switch windows or click buttons. Just speak and type!
@@ -28,6 +48,7 @@ Prosody is your personal voice-to-text assistant that lives quietly in the backg
 - **Lightweight**: Minimal CPU and memory usage, no bloated GUI
 - **Fast**: Instant transcription with OpenAI's Whisper model
 - **Simple**: Just one hotkey to remember - double-tap Ctrl
+- **Auto-starts**: Runs automatically after installation and on every login
 - **Open Source**: Powered by OpenAI Whisper (base.en model)
 
 ### Key Features
@@ -49,39 +70,14 @@ Prosody uses:
 
 The app runs as a background service, listening for your hotkey. When you double-tap Ctrl, it records audio, sends it to Whisper for transcription, and types the result wherever your cursor is positioned.
 
-## How to Use Prosody
-
-### Quick Start
-1. Place cursor where you want text (Prosody starts automatically on boot)
-2. Double-tap **Left Ctrl** to start recording 🎤
-3. Speak naturally
-4. Double-tap **Left Ctrl** again to transcribe
-5. Your words appear instantly!
-
 ### Controls
 - **Double-tap Left Ctrl**: Start/stop recording and transcribe
 - **Double-tap Escape**: Cancel current recording (no text output)
-- **Ctrl+C** (in terminal): Quit Prosody
-
-### Visual Indicator
-When recording, you'll see a sleek waveform at the bottom of your screen that responds to your voice. No intrusive windows or system tray icons!
+- **Visual Indicator**: Elegant waveform shows when recording
 
 ## Installation
 
-### Option 1: Debian/Ubuntu Package (Recommended)
-
-Download the latest `.deb` package from [releases](https://github.com/loganthorneloe/prosody/releases/latest):
-
-```bash
-# Download the latest release
-wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-stt_1.0.0-1_all.deb
-
-# Install
-sudo dpkg -i prosody-stt_1.0.0-1_all.deb
-sudo apt-get install -f  # Install any missing dependencies
-```
-
-### Option 2: From Source
+### From Source (For Development)
 
 ```bash
 # Clone the repository
@@ -97,13 +93,11 @@ pip install -r requirements.txt
 pip install -e .
 ```
 
-### First Run
-
-On first run, Prosody will download the Whisper model (~140MB). This only happens once and is stored in `~/.local/share/prosody/`.
-
-### Auto-Start
-
-**The .deb package automatically enables startup on login!** No configuration needed.
+**What happens after installation:**
+- ✅ Prosody starts immediately (you'll see a notification)
+- ✅ Auto-starts on every login
+- ⬇️ First use downloads Whisper model (~140MB, one-time)
+- 🚀 No configuration needed!
 
 To manage the service:
 ```bash
