@@ -48,7 +48,7 @@ Prosody is your personal voice-to-text assistant that lives quietly in the backg
 - **Lightweight**: Minimal CPU and memory usage, no bloated GUI
 - **Fast**: Instant transcription with OpenAI's Whisper model
 - **Simple**: Just one hotkey to remember - double-tap Ctrl
-- **Auto-starts**: Runs automatically after installation and on every login
+- **Auto-starts**: Runs automatically on every login (after first launch)
 - **Open Source**: Powered by OpenAI Whisper (base.en model)
 
 ### Key Features
@@ -57,7 +57,7 @@ Prosody is your personal voice-to-text assistant that lives quietly in the backg
 - 🚫 **Cancel Recording**: Double-tap Escape to cancel without transcribing
 - 📊 **Visual Feedback**: Elegant waveform indicator shows recording status
 - ⌨️ **Direct Typing**: Transcribed text is automatically typed at cursor position
-- 🚀 **Lightweight**: Runs quietly in background with minimal resource usage
+- 🚀 **Zero Configuration**: Install and launch from application menu - no terminal needed
 - 🤖 **Powered by Whisper**: Uses OpenAI's Whisper model for accurate transcription
 
 ### How It Works
