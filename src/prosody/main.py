@@ -171,8 +171,8 @@ class ProsodyApp:
                     "audio-input-microphone",
                     "-t",
                     "2000",
-                    "Prosody",
-                    "Started up",
+                    "Prosody Speech-to-Text",
+                    "Ready! Double-tap Ctrl to record",
                 ],
                 check=False,
             )
