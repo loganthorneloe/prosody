@@ -1,33 +1,21 @@
 #!/bin/bash
-# GUI launcher for Prosody that handles first-run setup
+# GUI launcher for bundled Prosody
 
-FIRST_RUN_FLAG="$HOME/.config/prosody/.first_run_complete"
 LOG_FILE="$HOME/.config/prosody/prosody.log"
-
-# Create directories
 mkdir -p "$HOME/.config/prosody"
-mkdir -p "$HOME/.local/share/prosody"
 
-# Redirect output to log file
+# Redirect output to log file for debugging
 exec >> "$LOG_FILE" 2>&1
 
-# If first run, show notification and install dependencies
-if [ ! -f "$FIRST_RUN_FLAG" ]; then
-    notify-send -i audio-input-microphone "Prosody Setup" "First run detected. Installing dependencies (this may take a few minutes)..." -t 10000
-    
-    # Install dependencies in user's local Python
-    python3 -m pip install --user --upgrade pip wheel
-    python3 -m pip install --user numpy sounddevice pynput openai-whisper torch torchaudio --extra-index-url https://download.pytorch.org/whl/cpu
-    
-    # Create first run flag
-    touch "$FIRST_RUN_FLAG"
-    
-    notify-send -i audio-input-microphone "Prosody Setup" "Setup complete! Starting Prosody..." -t 5000
+# Enable systemd service for auto-start on first run
+if [ ! -f "$HOME/.config/prosody/.service-enabled" ]; then
+    systemctl --user daemon-reload 2>/dev/null || true
+    systemctl --user enable prosody.service 2>/dev/null || true
+    touch "$HOME/.config/prosody/.service-enabled"
 fi
 
-# Enable systemd service for auto-start
-systemctl --user daemon-reload 2>/dev/null || true
-systemctl --user enable prosody.service 2>/dev/null || true
+# Show starting notification
+notify-send -i audio-input-microphone "Prosody" "Starting speech-to-text service..." -t 3000 || true
 
-# Run Prosody with system Python
-exec python3 -m prosody "$@"
+# Run bundled Prosody
+exec /opt/prosody/launcher "$@"

@@ -28,9 +28,7 @@ sudo apt-get install -f
 
 **That's it!** Find "Prosody Speech-to-Text" in your application menu and click to start!
 
-*Note: First launch installs dependencies (~2GB) - you'll see progress notifications.*
-
-**Prosody runs silently in the background** - no windows, no terminal, just notifications when starting.
+**Prosody runs silently in the background** - no windows, no terminal, completely self-contained.
 
 ### 🎤 How to Use
 1. Click where you want to type
@@ -100,7 +98,7 @@ pip install -e .
 **What happens after installation:**
 - 🚀 Launch from your application menu (search "Prosody")
 - ✅ Auto-starts on every login after first launch
-- ⬇️ First use downloads Whisper model (~140MB, one-time)
+- 📦 Everything bundled - no downloads or installation needed
 - 🔔 Shows notification when ready
 
 To manage the service:

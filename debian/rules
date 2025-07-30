@@ -12,6 +12,10 @@ override_dh_auto_test:
 
 override_dh_auto_install:
 	dh_auto_install
+	# Build the self-contained bundle
+	./build-bundle.sh
+	# Copy the entire bundle
+	cp -r debian/prosody-bundle/opt debian/prosody-stt/
 	# Install systemd user service
 	install -D -m 644 prosody.service debian/prosody-stt/usr/lib/systemd/user/prosody.service
 	# Also install service file where postinst can find it

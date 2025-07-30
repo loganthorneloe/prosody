@@ -25,18 +25,6 @@ case "$1" in
         # Copy service file to system location
         cp /usr/share/prosody-stt/prosody.service /etc/systemd/user/prosody.service || true
         
-        # Copy service file to user's systemd directory for auto-start
-        if [ -n "$SUDO_USER" ]; then
-            USER_HOME=$(getent passwd "$SUDO_USER" | cut -d: -f6)
-            mkdir -p "$USER_HOME/.config/systemd/user/"
-            cp /usr/share/prosody-stt/prosody.service "$USER_HOME/.config/systemd/user/" || true
-            chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME/.config/systemd/user/prosody.service" || true
-            
-            # Create a flag file to enable on first login
-            mkdir -p "$USER_HOME/.config/prosody/"
-            touch "$USER_HOME/.config/prosody/.enable-on-login"
-            chown -R "$SUDO_USER:$SUDO_USER" "$USER_HOME/.config/prosody/" || true
-        fi
         
         echo ""
         echo "✓ Prosody has been installed!"
