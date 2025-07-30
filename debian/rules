@@ -16,8 +16,9 @@ override_dh_auto_install:
 	install -D -m 644 prosody.service debian/prosody-stt/usr/lib/systemd/user/prosody.service
 	# Also install service file where postinst can find it
 	install -D -m 644 prosody.service debian/prosody-stt/usr/share/prosody-stt/prosody.service
-	# Create wrapper script that ensures dependencies
+	# Create wrapper scripts
 	install -D -m 755 debian/prosody-wrapper debian/prosody-stt/usr/bin/prosody
+	install -D -m 755 prosody-gui debian/prosody-stt/usr/bin/prosody-gui
 
 override_dh_python3:
 	# Don't auto-generate Python dependencies since we handle them in wrapper

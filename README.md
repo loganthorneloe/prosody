@@ -28,6 +28,8 @@ sudo apt-get install -f
 
 **That's it!** Find "Prosody Speech-to-Text" in your application menu and click to start!
 
+*Note: First launch installs dependencies (~2GB) - you'll see progress notifications.*
+
 ### 🎤 How to Use
 1. Click where you want to type
 2. **Double-tap Left Ctrl** to start recording
