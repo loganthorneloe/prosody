@@ -26,9 +26,13 @@ sudo dpkg -i prosody-stt_1.0.0-1_all.deb
 sudo apt-get install -f
 ```
 
-**That's it!** Find "Prosody Speech-to-Text" in your application menu and click to start!
+Then run:
+```bash
+prosody                              # Start Prosody
+systemctl --user enable prosody      # Enable auto-start on login
+```
 
-**Prosody runs silently in the background** - no windows, no terminal, completely self-contained.
+**Prosody runs silently in the background** - completely self-contained.
 
 ### 🎤 How to Use
 1. Click where you want to type
@@ -50,7 +54,7 @@ Prosody is your personal voice-to-text assistant that lives quietly in the backg
 - **Silent & Lightweight**: Runs invisibly in background, minimal CPU/memory usage
 - **Fast**: Instant transcription with OpenAI's Whisper model
 - **Simple**: Just one hotkey to remember - double-tap Ctrl
-- **Auto-starts**: Runs automatically on every login (after first launch)
+- **Auto-starts**: Can be enabled to run on login with systemctl
 - **Open Source**: Powered by OpenAI Whisper (base.en model)
 
 ### Key Features
@@ -59,7 +63,7 @@ Prosody is your personal voice-to-text assistant that lives quietly in the backg
 - 🚫 **Cancel Recording**: Double-tap Escape to cancel without transcribing
 - 📊 **Visual Feedback**: Elegant waveform indicator shows recording status
 - ⌨️ **Direct Typing**: Transcribed text is automatically typed at cursor position
-- 🚀 **Zero Configuration**: Install and launch from application menu - no terminal needed
+- 🚀 **Self-Contained**: All dependencies bundled - no downloads needed
 - 🤖 **Powered by Whisper**: Uses OpenAI's Whisper model for accurate transcription
 
 ### How It Works
@@ -96,9 +100,9 @@ pip install -e .
 ```
 
 **What happens after installation:**
-- 🚀 Launch from your application menu (search "Prosody")
-- ✅ Auto-starts on every login after first launch
-- 📦 Everything bundled - no downloads or installation needed
+- 🚀 Run `prosody` to start
+- ✅ Enable auto-start with `systemctl --user enable prosody`
+- 📦 Everything bundled - instant startup
 - 🔔 Shows notification when ready
 
 To manage the service:

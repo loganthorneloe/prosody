@@ -3,47 +3,20 @@ set -e
 
 case "$1" in
     configure)
-        # Create system user for prosody if needed (optional)
-        # For now, we run as the regular user
-        
-        # Ensure python3-pip is available
-        if ! command -v pip3 &> /dev/null; then
-            echo "Installing pip3..."
-            apt-get update
-            apt-get install -y python3-pip
-        fi
-        
-        # Install Python package in system
-        pip3 install --system /usr/share/prosody-stt/ || true
-        
-        # Enable auto-start for all users
-        echo "Enabling auto-start for Prosody..."
-        
-        # Create systemd user service directory if it doesn't exist
-        mkdir -p /etc/systemd/user/
-        
         # Copy service file to system location
         cp /usr/share/prosody-stt/prosody.service /etc/systemd/user/prosody.service || true
-        
         
         echo ""
         echo "✓ Prosody has been installed!"
         echo ""
         echo "To start using Prosody:"
-        echo "  • Find 'Prosody Speech-to-Text' in your application menu"
-        echo "  • Or run 'prosody' from terminal"
-        echo "  • After first start, it will auto-start on login"
+        echo "  1. Run: prosody"
+        echo "  2. Enable auto-start: systemctl --user enable prosody"
         echo ""
         echo "Usage:"
         echo "  - Double-tap Ctrl to start/stop recording"
         echo "  - Double-tap Escape to cancel recording"
         echo ""
-        echo "To manage Prosody:"
-        echo "  - Check status: systemctl --user status prosody"
-        echo "  - Stop: systemctl --user stop prosody"
-        echo "  - Disable auto-start: systemctl --user disable prosody"
-        echo ""
-        echo "Note: First run will download the Whisper model (~140MB)"
         ;;
 esac
 
