@@ -1,10 +1,21 @@
 """Audio recording functionality for Prosody."""
 
+import os
+import sys
 import threading
 import queue
 import numpy as np
 import sounddevice as sd
 from typing import Optional, Tuple
+
+# Check if running in development mode
+DEV_MODE = os.environ.get('PROSODY_DEV') == '1' or sys.argv[0].endswith('__main__.py')
+
+
+def log(message: str, important: bool = False):
+    """Log a message, respecting dev/production mode."""
+    if DEV_MODE:
+        print(message)
 
 
 class AudioRecorder:
@@ -28,7 +39,7 @@ class AudioRecorder:
     def _audio_callback(self, indata, frames, time, status):
         """Callback function for audio stream."""
         if status:
-            print(f"Audio recording status: {status}")
+            log(f"Audio recording status: {status}", important=True)
 
         # Copy audio data to queue
         if self.recording:
@@ -41,6 +52,15 @@ class AudioRecorder:
         with self._lock:
             if self.recording:
                 return
+
+            # Clean up any existing stream first
+            if self.stream:
+                try:
+                    self.stream.stop()
+                    self.stream.close()
+                except:
+                    pass
+                self.stream = None
 
             # Clear any existing data in the queue
             while not self.audio_queue.empty():
@@ -60,6 +80,13 @@ class AudioRecorder:
                 self.stream.start()
                 self.recording = True
             except Exception as e:
+                self.recording = False
+                if self.stream:
+                    try:
+                        self.stream.close()
+                    except:
+                        pass
+                    self.stream = None
                 raise RuntimeError(f"Failed to start audio recording: {e}")
 
     def stop_recording(self) -> np.ndarray:
@@ -130,6 +157,10 @@ class AudioRecorder:
 
     def __del__(self):
         """Cleanup when the recorder is destroyed."""
-        if self.stream:
-            self.stream.stop()
-            self.stream.close()
+        try:
+            if self.stream:
+                self.stream.stop()
+                self.stream.close()
+                self.stream = None
+        except:
+            pass

@@ -46,7 +46,20 @@ cd prosody
 
 **Now run it:**
 ```bash
-prosody  # This is the command you'll use
+# Quick test (with output)
+prosody
+
+# Normal usage - pick one:
+prosody &                        # Quick background (dies with terminal)
+nohup prosody &                  # Background (survives terminal close)
+systemctl --user start prosody   # As service (BEST option)
+
+# To stop prosody:
+pkill -f prosody                 # Kills all prosody processes
+systemctl --user stop prosody    # Stops the service
+
+# For auto-start on login:
+systemctl --user enable prosody
 ```
 
 ## 🛠️ Development Setup
@@ -80,26 +93,59 @@ Once running (either `prosody` for users or `python -m prosody` for developers):
 1. **Double-tap Left Ctrl** - You'll see a waveform at bottom of screen
 2. **Speak clearly** - "Hello, this is a test of Prosody"
 3. **Double-tap Left Ctrl again** - Text appears where your cursor is!
-4. **To cancel:** Double-tap Escape while recording
+4. **To cancel:** Press Escape while recording
 
 ### Running Options
 
 ```bash
-# Run in foreground (see output)
+# Run in foreground (for testing only - shows output)
 prosody
 
-# Run in background (silent)
-prosody > /dev/null 2>&1 &
+# Run in background (no output, dies when terminal closes)
+prosody &
 
-# Run with nohup (survives terminal close)
-nohup prosody > /dev/null 2>&1 &
+# Run in background (no output, survives terminal close)
+nohup prosody &
 
-# Run as systemd service (cleanest option)
+# Stop background prosody (works for & and nohup)
+pkill -f prosody
+
+# Run as systemd service (RECOMMENDED - cleanest option)
 systemctl --user start prosody
 
-# Enable auto-start on login
+# Check if service is running
+systemctl --user status prosody
+
+# Stop the service
+systemctl --user stop prosody
+
+# Enable auto-start on login (do this once)
 systemctl --user enable prosody
+
+# Disable auto-start
+systemctl --user disable prosody
 ```
+
+### Understanding How It Works
+
+**Background Process (`prosody &`)**
+- Runs in current terminal session
+- No output to terminal (completely silent)
+- Dies if you close the terminal
+- Good for quick testing
+
+**Nohup (`nohup prosody &`)**
+- Runs independent of terminal
+- Survives terminal close
+- No output anywhere
+- Good for long-running sessions without systemd
+
+**Systemd Service (RECOMMENDED)**
+- Runs as proper system service
+- Automatically restarts if crashes
+- Can auto-start on login
+- Logs available via `journalctl --user -u prosody`
+- This is how you should run it normally
 
 ## What is Prosody?
 
@@ -117,7 +163,7 @@ Prosody is your personal voice-to-text assistant that lives quietly in the backg
 ### Key Features
 
 - 🎤 **Global Hotkey**: Double-tap Left Ctrl to start/stop recording
-- 🚫 **Cancel Recording**: Double-tap Escape to cancel without transcribing
+- 🚫 **Cancel Recording**: Press Escape to cancel without transcribing
 - 📊 **Visual Feedback**: Elegant waveform indicator shows recording status
 - ⌨️ **Direct Typing**: Transcribed text is automatically typed at cursor position
 - 🤖 **Powered by Whisper**: Uses OpenAI's Whisper model for accurate transcription
@@ -269,6 +315,22 @@ The app runs as a background service, listening for your hotkey. When you double
 - Your systemd directory is probably owned by root
 - Fix with: `sudo chown -R $USER:$USER ~/.config/systemd`
 - Then run `./install.sh` again
+
+### How do I check if Prosody is running?
+```bash
+# Check all methods:
+ps aux | grep prosody          # See all prosody processes
+pgrep -f prosody               # Get process IDs
+systemctl --user status prosody # Check systemd service
+
+# Kill all prosody processes:
+pkill -f prosody
+```
+
+### Multiple instances running?
+- This can happen if you mix running methods
+- Kill all: `pkill -f prosody`
+- Then start fresh with ONE method (preferably systemd)
 
 ## Contributing
 

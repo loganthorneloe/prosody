@@ -16,6 +16,15 @@ from .ui_polished import PolishedWaveformIndicator as RecordingIndicator, type_t
 
 from .transcription import Transcriber
 
+# Check if running in development mode
+DEV_MODE = os.environ.get('PROSODY_DEV') == '1' or sys.argv[0].endswith('__main__.py')
+
+
+def log(message: str, important: bool = False):
+    """Log a message, respecting dev/production mode."""
+    if DEV_MODE:
+        print(message)
+
 
 class ProsodyApp:
     """Main application class that coordinates all components."""
@@ -23,7 +32,7 @@ class ProsodyApp:
     def __init__(self):
         """Initialize the Prosody application."""
         self.audio_recorder = AudioRecorder()
-        self.transcriber = Transcriber()
+        self.transcriber = None  # Initialize later to control timing
         self.recording_indicator = RecordingIndicator(
             get_audio_level=self._get_current_audio_level
         )
@@ -46,7 +55,7 @@ class ProsodyApp:
 
     def _signal_handler(self, signum, frame):
         """Handle system signals for graceful shutdown."""
-        print("\nShutting down Prosody...")
+        log("\nShutting down Prosody...")
         self.running = False
 
     def _get_current_audio_level(self):
@@ -68,7 +77,7 @@ class ProsodyApp:
         if self.is_recording:
             return
 
-        print("Starting recording...")
+        log("Starting recording...")
         self.is_recording = True
 
         # Show recording indicator
@@ -78,16 +87,30 @@ class ProsodyApp:
         try:
             self.audio_recorder.start_recording()
         except Exception as e:
-            print(f"Error starting recording: {e}")
+            log(f"Error starting recording: {e}", important=True)
             self.is_recording = False
             self.recording_indicator.hide()
+            # Show error notification
+            try:
+                subprocess.run(
+                    [
+                        "notify-send",
+                        "-i", "dialog-error",
+                        "-t", "3000",
+                        "Prosody Error",
+                        f"Failed to start recording: {e}",
+                    ],
+                    check=False,
+                )
+            except:
+                pass
 
     def stop_recording(self):
         """Stop recording and transcribe audio."""
         if not self.is_recording:
             return
 
-        print("Stopping recording...")
+        log("Stopping recording...")
         self.is_recording = False
 
         # Hide recording indicator
@@ -97,21 +120,21 @@ class ProsodyApp:
         audio_data = self.audio_recorder.stop_recording()
 
         if len(audio_data) > 0:
-            print("Transcribing audio...")
+            log("Transcribing audio...")
 
             # Transcribe in a separate thread to avoid blocking
             threading.Thread(
                 target=self._transcribe_and_type, args=(audio_data,), daemon=True
             ).start()
         else:
-            print("No audio recorded")
+            log("No audio recorded")
 
     def cancel_recording(self):
         """Cancel recording without transcribing."""
         if not self.is_recording:
             return
 
-        print("Recording cancelled")
+        log("Recording cancelled")
         self.is_recording = False
 
         # Hide recording indicator
@@ -140,29 +163,38 @@ class ProsodyApp:
     def _transcribe_and_type(self, audio_data):
         """Transcribe audio and type the result."""
         try:
+            # Check if transcriber is initialized
+            if not self.transcriber:
+                log("Transcriber not ready", important=True)
+                return
+                
             # Transcribe the audio
             text = self.transcriber.transcribe(audio_data)
 
             if text:
-                print(f"Transcribed: {text}")
+                log(f"Transcribed: {text}")
                 # Type the transcribed text
                 type_text(text)
             else:
-                print("No speech detected")
+                log("No speech detected")
 
         except Exception as e:
-            print(f"Transcription error: {e}")
+            log(f"Transcription error: {e}", important=True)
 
     def run(self):
         """Run the main application loop."""
-        print("Prosody is starting...")
-        print("Double-tap Left Ctrl to start/stop recording")
-        print("Double-tap Escape to cancel recording")
+        log("Prosody is starting...")
+        log("Double-tap Left Ctrl to start/stop recording")
+        log("Press Escape to cancel recording")
+
+        # Initialize transcriber (loads model)
+        log("Loading speech recognition model...")
+        self.transcriber = Transcriber()
 
         # Start the hotkey listener
         self.hotkey_listener.start()
 
-        # Show startup notification
+        # Show ready notification only after model is loaded
         try:
             subprocess.run(
                 [
@@ -171,8 +203,8 @@ class ProsodyApp:
                     "audio-input-microphone",
                     "-t",
                     "2000",
-                    "Prosody Speech-to-Text",
-                    "Ready! Double-tap Ctrl to record",
+                    "Prosody Ready",
+                    "Double-tap Ctrl to start recording",
                 ],
                 check=False,
             )
@@ -211,7 +243,7 @@ class ProsodyApp:
         except:
             pass
 
-        print("Prosody has stopped")
+        log("Prosody has stopped")
         sys.exit(0)
 
 

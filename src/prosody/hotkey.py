@@ -29,7 +29,6 @@ class HotkeyListener:
         self.on_cancel_pressed = on_cancel_pressed
         self.is_recording = False
         self.last_press_time = 0
-        self.last_escape_time = 0
         self.listener: Optional[keyboard.Listener] = None
         self._lock = threading.Lock()
 
@@ -51,16 +50,10 @@ class HotkeyListener:
 
         elif key == CANCEL_HOTKEY:
             with self._lock:
-                # Check if this is a double escape press
-                if current_time - self.last_escape_time <= DOUBLE_PRESS_INTERVAL:
-                    # Double escape detected - cancel recording
-                    if self.is_recording and self.on_cancel_pressed:
-                        self.is_recording = False
-                        self.on_cancel_pressed()
-                    self.last_escape_time = 0  # Reset
-                else:
-                    # First escape press - record the time
-                    self.last_escape_time = current_time
+                # Single escape to cancel recording
+                if self.is_recording and self.on_cancel_pressed:
+                    self.is_recording = False
+                    self.on_cancel_pressed()
 
     def start(self):
         """Start listening for hotkey events."""

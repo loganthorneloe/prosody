@@ -77,7 +77,7 @@ After=graphical-session.target
 [Service]
 Type=simple
 ExecStart=%h/.local/bin/prosody
-Restart=always
+Restart=on-failure
 RestartSec=10
 Environment="DISPLAY=:0"
 
@@ -134,11 +134,11 @@ echo ""
 echo "✅ Prosody installed successfully!"
 echo ""
 echo "To start Prosody:"
-echo "  prosody                                  # Run in foreground"
-echo "  prosody > /dev/null 2>&1 &              # Run in background (silent)"
-echo "  nohup prosody > /dev/null 2>&1 &        # Run in background (survives terminal close)"
+echo "  prosody                                  # Run in foreground (for testing)"
+echo "  prosody &                                # Run in background"
+echo "  nohup prosody &                          # Run in background (survives terminal close)"
 if [ "$SYSTEMD_SETUP_SUCCESS" = true ] && command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
-    echo "  systemctl --user start prosody           # Start as service"
+    echo "  systemctl --user start prosody           # Run as service (recommended)"
     echo ""
     echo "To enable auto-start on login:"
     echo "  systemctl --user enable prosody"
@@ -152,4 +152,4 @@ echo "  2. Double-tap Left Ctrl to start recording"
 echo "  3. Speak naturally"
 echo "  4. Double-tap Left Ctrl again to transcribe"
 echo ""
-echo "Tip: Double-tap Escape to cancel recording"
+echo "Tip: Press Escape to cancel recording"
