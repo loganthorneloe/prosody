@@ -70,12 +70,10 @@ class PolishedWaveformIndicator:
         self.window.overrideredirect(True)
         self.window.attributes("-topmost", True)
 
-        # Dark background
+        # Make window transparent
+        self.window.wait_visibility()
+        self.window.wm_attributes("-transparentcolor", "black")
         self.window.configure(bg="black")
-        try:
-            self.window.attributes("-alpha", 0.9)
-        except:
-            pass
 
         # Small pill size
         width, height = 140, 36

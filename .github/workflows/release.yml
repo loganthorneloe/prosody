@@ -15,72 +15,8 @@ jobs:
   build-and-test:
     uses: ./.github/workflows/test.yml
     
-  build-deb:
-    needs: build-and-test
-    runs-on: ubuntu-latest
-    
-    steps:
-    - uses: actions/checkout@v4
-    
-    - name: Set up Python
-      uses: actions/setup-python@v5
-      with:
-        python-version: '3.10'
-        
-    - name: Install build dependencies
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y build-essential debhelper dh-python python3-all python3-setuptools python3-pip python3-venv
-        
-    - name: Determine version
-      id: version
-      run: |
-        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-          VERSION="${{ github.event.inputs.version }}"
-        else
-          VERSION=${GITHUB_REF#refs/tags/v}
-        fi
-        echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
-        echo "Building version $VERSION"
-        
-    - name: Update version in files
-      run: |
-        # Update setup.py
-        sed -i "s/version=\".*\"/version=\"${{ steps.version.outputs.VERSION }}\"/" setup.py
-        
-        # Update debian/changelog
-        cat > debian/changelog << EOF
-        prosody-stt (${{ steps.version.outputs.VERSION }}-1) stable; urgency=medium
-        
-          * Release version ${{ steps.version.outputs.VERSION }}
-          * See https://github.com/${{ github.repository }}/releases/tag/v${{ steps.version.outputs.VERSION }}
-        
-         -- ${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>  $(date -R)
-        EOF
-        
-    - name: Build Debian package
-      run: |
-        chmod +x build-deb.sh
-        ./build-deb.sh
-        
-    - name: Test package installation
-      run: |
-        # Install the package
-        sudo dpkg -i dist/*.deb || true
-        sudo apt-get install -f -y
-        
-        # Verify installation
-        which prosody
-        dpkg -l | grep prosody-stt
-        
-    - name: Upload artifacts
-      uses: actions/upload-artifact@v4
-      with:
-        name: debian-package
-        path: dist/*.deb
-        
   create-release:
-    needs: build-deb
+    needs: build-and-test
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -88,12 +24,6 @@ jobs:
     steps:
     - uses: actions/checkout@v4
     
-    - name: Download artifacts
-      uses: actions/download-artifact@v4
-      with:
-        name: debian-package
-        path: dist/
-        
     - name: Determine version
       id: version
       run: |
@@ -115,24 +45,38 @@ jobs:
         draft: false
         prerelease: false
         generate_release_notes: true
-        files: |
-          dist/*.deb
         body: |
           ## Installation
           
-          ### Debian/Ubuntu
+          ### Quick Install (Recommended)
           ```bash
-          # Download the .deb package
-          wget https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.TAG }}/prosody-stt_${{ steps.version.outputs.VERSION }}-1_all.deb
-          
-          # Install
-          sudo dpkg -i prosody-stt_${{ steps.version.outputs.VERSION }}-1_all.deb
-          sudo apt-get install -f  # Fix any missing dependencies
+          # Clone and install
+          git clone https://github.com/${{ github.repository }}.git
+          cd prosody && ./install.sh
           ```
           
-          ### From Source
+          ### Manual Install
           ```bash
-          pip install git+https://github.com/${{ github.repository }}.git@${{ steps.version.outputs.TAG }}
+          git clone https://github.com/${{ github.repository }}.git
+          cd prosody
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pip install -e .
+          ```
+          
+          ## Running Prosody
+          
+          ```bash
+          # Run in foreground
+          prosody
+          
+          # Run in background  
+          prosody &
+          
+          # Enable auto-start
+          systemctl --user enable prosody
+          systemctl --user start prosody
           ```
           
           ## What's Changed

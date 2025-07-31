@@ -4,11 +4,12 @@ After=graphical-session.target
 
 [Service]
 Type=simple
-ExecStart=/usr/bin/prosody
-Restart=on-failure
-RestartSec=5
+# Note: This is a template. The install.sh script will create a user-specific version
+# with the correct path to your prosody installation
+ExecStart=%h/.local/bin/prosody
+Restart=always
+RestartSec=10
 Environment="DISPLAY=:0"
-Environment="XAUTHORITY=%h/.Xauthority"
 
 [Install]
 WantedBy=default.target

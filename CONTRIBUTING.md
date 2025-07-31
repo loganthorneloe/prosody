@@ -12,7 +12,7 @@ If you find a bug, please create an issue on GitHub with the following informati
 2. **Steps to Reproduce**: Detailed steps to reproduce the issue
 3. **Expected Behavior**: What you expected to happen
 4. **Actual Behavior**: What actually happened
-5. **System Information**: Your OS version, Python version, and Prosody version
+5. **System Information**: Your OS version, Python version
 6. **Logs**: Any relevant error messages or logs
 
 ### Requesting Features
@@ -54,8 +54,6 @@ Feature requests are welcome! Please create an issue with:
    ```bash
    python3 -m venv venv
    source venv/bin/activate  # Linux/Mac
-   # or
-   venv\Scripts\activate     # Windows
    ```
 
 3. **Install dependencies**
@@ -122,12 +120,7 @@ Before submitting a PR:
    pytest --cov=src/prosody
    ```
 
-3. **Test the Debian package** (if applicable)
-   ```bash
-   ./test-deb-install.sh
-   ```
-
-4. **Manual testing**
+3. **Manual testing**
    - Test hotkey functionality
    - Verify recording and transcription
    - Check the visual indicator
@@ -136,22 +129,20 @@ Before submitting a PR:
 ### CI/CD
 
 All pull requests automatically trigger:
-- Tests on Ubuntu and macOS
+- Tests on Ubuntu
 - Multiple Python versions (3.8-3.11)
 - Code coverage checks
-- Debian package building
 
 ### Making a Release
 
 If you're a maintainer:
 
-1. **Update version in setup.py**
-2. **Create and push a tag**
+1. **Create and push a tag**
    ```bash
    git tag -a v1.0.0 -m "Release version 1.0.0"
    git push origin v1.0.0
    ```
-3. GitHub Actions automatically creates the release
+2. GitHub Actions automatically creates the release with source install instructions
 
 ## Questions?
 

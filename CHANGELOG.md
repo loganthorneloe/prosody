@@ -7,18 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- Simplified to source-only distribution (removed Debian packaging)
+- Installation now via simple `./install.sh` script
+- Removed all GUI launchers and complex bundling
+
 ### Added
-- Initial release of Prosody
 - Global hotkey support (double-tap Ctrl to record)
 - Cancel recording with double-tap Escape
 - Visual waveform indicator during recording
 - Automatic transcription using OpenAI Whisper
 - Direct text typing into active application
 - Systemd service for auto-start
-- Debian package distribution
-- Comprehensive test suite with 72% coverage
+- Comprehensive test suite
 - CI/CD with GitHub Actions
-- Automated release process
 
 ### Technical Details
 - Built with Python 3.8+ compatibility
@@ -27,9 +29,4 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - OpenAI Whisper base.en model for transcription
 - tkinter for visual indicators (no system tray)
 
-## [1.0.0] - TBD
-
-First public release.
-
-[Unreleased]: https://github.com/yourusername/prosody/compare/v1.0.0...HEAD
-[1.0.0]: https://github.com/yourusername/prosody/releases/tag/v1.0.0
+[Unreleased]: https://github.com/loganthorneloe/prosody/compare/HEAD...HEAD
