@@ -70,16 +70,15 @@ class PolishedWaveformIndicator:
         self.window.overrideredirect(True)
         self.window.attributes("-topmost", True)
 
-        # Try to set window transparency (Linux method)
+        # Set window background to match pill background exactly
         self.window.wait_visibility()
+        self.window.configure(bg="#1a1a1a")
+        
+        # Try to add some transparency if supported
         try:
-            # This works on some Linux systems with compositor
-            self.window.attributes("-alpha", 0.95)
+            self.window.attributes("-alpha", 0.98)
         except:
             pass
-        
-        # Use a color that matches the pill background to minimize corner visibility
-        self.window.configure(bg="#1a1a1a")
 
         # Small pill size
         width, height = 140, 36
@@ -88,24 +87,12 @@ class PolishedWaveformIndicator:
         )
         self.canvas.pack()
 
-        # Draw pill background
-        radius = height // 2
-        # Left circle
-        self.canvas.create_oval(
-            0, 0, height, height, fill="#1a1a1a", outline="#333333", width=1
-        )
-        # Right circle
-        self.canvas.create_oval(
-            width - height, 0, width, height, fill="#1a1a1a", outline="#333333", width=1
-        )
-        # Center rectangle
+        # Just draw a simple rectangle - no rounded corners, no fancy stuff
         self.canvas.create_rectangle(
-            radius, 0, width - radius, height, fill="#1a1a1a", outline="", width=0
-        )
-        # Top and bottom borders
-        self.canvas.create_line(radius, 0, width - radius, 0, fill="#333333", width=1)
-        self.canvas.create_line(
-            radius, height - 1, width - radius, height - 1, fill="#333333", width=1
+            0, 0, width, height,
+            fill="#1a1a1a",
+            outline="#333333",
+            width=1
         )
 
         # Position at bottom center of screen
@@ -147,8 +134,8 @@ class PolishedWaveformIndicator:
         num_points = 40
 
         for i in range(num_points):
-            # Map i to x position (from edge to edge)
-            x = 5 + (i * (width - 10) / (num_points - 1))
+            # Map i to x position (full width)
+            x = 2 + (i * (width - 4) / (num_points - 1))
 
             # Get interpolated audio level
             history_index = int(i * len(self.history) / num_points)
