@@ -144,6 +144,22 @@ systemctl --user enable prosody
 - **Punctuation:** Say "period", "comma", "question mark"
 - **Important:** Make sure `~/.local/bin` is in your PATH for the `prosody` command to work
 
+## Updating Prosody
+
+### From Release
+```bash
+cd ~/prosody-1.0.0  # or wherever you installed
+git pull            # if cloned, or download new release
+./install.sh        # reinstall with updated code
+```
+
+### From Git
+```bash
+cd ~/prosody        # your existing clone
+git pull
+./install.sh        # reinstall with updated code
+```
+
 ## How It Works
 
 Prosody uses:
