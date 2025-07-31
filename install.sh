@@ -52,11 +52,11 @@ pip install -e .
 
 # Set up systemd service
 echo "Setting up auto-start service..."
-# Create systemd directory
-mkdir -p ~/.config/systemd/user/ 2>/dev/null || true
+SYSTEMD_SETUP_SUCCESS=false
 
-# Create user-specific service file (check permissions)
-if [ -w ~/.config/systemd/user/ ]; then
+# Try to create systemd directory
+if mkdir -p ~/.config/systemd/user/ 2>/dev/null; then
+    # Create user-specific service file
     cat > ~/.config/systemd/user/prosody.service << 'EOF'
 [Unit]
 Description=Prosody Speech-to-Text Service
@@ -72,8 +72,9 @@ Environment="DISPLAY=:0"
 [Install]
 WantedBy=default.target
 EOF
+    SYSTEMD_SETUP_SUCCESS=true
 else
-    echo "Warning: Cannot write to ~/.config/systemd/user/"
+    echo "Warning: Cannot create ~/.config/systemd/user/"
     echo "Auto-start setup skipped. To set up manually later:"
     echo "  mkdir -p ~/.config/systemd/user/"
     echo "  cp prosody.service ~/.config/systemd/user/"
@@ -93,10 +94,13 @@ EOF
 chmod +x ~/.local/bin/prosody
 
 
-# Reload systemd and enable service (only if systemd is available)
-if command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
+# Reload systemd and enable service (only if systemd is available AND we created the service file)
+if [ "$SYSTEMD_SETUP_SUCCESS" = true ] && command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
     systemctl --user daemon-reload
     systemctl --user enable prosody
+elif [ "$SYSTEMD_SETUP_SUCCESS" = false ]; then
+    echo ""
+    echo "Note: systemd service not set up (see warning above)."
 else
     echo ""
     echo "Note: systemd not available or not in user session."
@@ -119,7 +123,7 @@ echo ""
 echo "To start Prosody:"
 echo "  prosody                        # Run in foreground"
 echo "  prosody &                      # Run in background"
-if command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
+if [ "$SYSTEMD_SETUP_SUCCESS" = true ] && command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
     echo "  systemctl --user start prosody # Start as service"
     echo ""
     echo "Auto-start is enabled. Prosody will start on your next login."

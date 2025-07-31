@@ -210,6 +210,26 @@ rm -rf ~/prosody-1.0.0
 
 **How it works:** The `prosody` command always runs from wherever you last ran `install.sh`, because the installer saves that location.
 
+## Uninstalling Prosody
+
+To uninstall Prosody:
+
+```bash
+# Run the uninstaller (works from any directory)
+~/prosody/uninstall.sh  # or wherever you installed it
+
+# Optional: Remove the installation directory
+rm -rf ~/prosody
+
+# Optional: Remove Whisper model cache (~140MB)
+rm -rf ~/.cache/whisper
+```
+
+The uninstaller will:
+- Stop and disable the systemd service
+- Remove the `prosody` command from ~/.local/bin
+- Clean up systemd configuration
+
 ## How It Works
 
 Prosody uses:
