@@ -27,6 +27,11 @@ For users who want to use Prosody:
 wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-1.0.0.tar.gz
 tar -xzf prosody-1.0.0.tar.gz
 cd prosody-1.0.0
+
+# Fix permissions (needed for downloaded releases)
+chmod -R u+w .
+
+# Install
 ./install.sh
 ```
 
@@ -190,6 +195,9 @@ git pull
 wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-X.X.X.tar.gz
 tar -xzf prosody-X.X.X.tar.gz
 cd prosody-X.X.X
+
+# Fix permissions (needed for downloaded releases)
+chmod -R u+w .
 
 # Install (this updates the wrapper to point to the new location)
 ./install.sh

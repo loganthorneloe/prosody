@@ -21,6 +21,20 @@ if ! command -v pip3 &> /dev/null; then
     exit 1
 fi
 
+# Check if we can write to current directory
+if [ ! -w "." ]; then
+    echo ""
+    echo "⚠️  Permission issue detected!"
+    echo ""
+    echo "The current directory is not writable. This often happens when extracting"
+    echo "a downloaded tarball. Please fix permissions first:"
+    echo ""
+    echo "  chmod -R u+w ."
+    echo ""
+    echo "Then run ./install.sh again."
+    exit 1
+fi
+
 # Create virtual environment
 echo "Creating virtual environment..."
 python3 -m venv venv
