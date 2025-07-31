@@ -70,15 +70,21 @@ class PolishedWaveformIndicator:
         self.window.overrideredirect(True)
         self.window.attributes("-topmost", True)
 
-        # Make window transparent
+        # Try to set window transparency (Linux method)
         self.window.wait_visibility()
-        self.window.wm_attributes("-transparentcolor", "black")
-        self.window.configure(bg="black")
+        try:
+            # This works on some Linux systems with compositor
+            self.window.attributes("-alpha", 0.95)
+        except:
+            pass
+        
+        # Use a color that matches the pill background to minimize corner visibility
+        self.window.configure(bg="#1a1a1a")
 
         # Small pill size
         width, height = 140, 36
         self.canvas = tk.Canvas(
-            self.window, width=width, height=height, bg="black", highlightthickness=0
+            self.window, width=width, height=height, bg="#1a1a1a", highlightthickness=0
         )
         self.canvas.pack()
 
