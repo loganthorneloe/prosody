@@ -66,13 +66,22 @@ class PolishedWaveformIndicator:
         if self.window is not None:
             return
 
+        # Small pill size
+        width, height = 140, 36
+        
+        # Calculate position BEFORE creating window
+        screen_width = self.root.winfo_screenwidth()
+        screen_height = self.root.winfo_screenheight()
+        x_position = (screen_width - width) // 2
+        y_position = screen_height - height - 40
+        
+        # Create window with position already set
         self.window = tk.Toplevel(self.root)
         self.window.overrideredirect(True)
-        self.window.attributes("-topmost", True)
-
-        # Set window background to match pill background exactly
-        self.window.wait_visibility()
+        self.window.withdraw()  # Hide it initially
+        self.window.geometry(f"{width}x{height}+{x_position}+{y_position}")
         self.window.configure(bg="#1a1a1a")
+        self.window.attributes("-topmost", True)
         
         # Try to add some transparency if supported
         try:
@@ -80,8 +89,6 @@ class PolishedWaveformIndicator:
         except:
             pass
 
-        # Small pill size
-        width, height = 140, 36
         self.canvas = tk.Canvas(
             self.window, width=width, height=height, bg="#1a1a1a", highlightthickness=0
         )
@@ -94,14 +101,9 @@ class PolishedWaveformIndicator:
             outline="#333333",
             width=1
         )
-
-        # Position at bottom center of screen
-        self.window.update_idletasks()
-        screen_width = self.window.winfo_screenwidth()
-        screen_height = self.window.winfo_screenheight()
-        x_position = (screen_width - width) // 2
-        y_position = screen_height - height - 40
-        self.window.geometry(f"{width}x{height}+{x_position}+{y_position}")
+        
+        # Now show the window at the correct position
+        self.window.deiconify()
 
         # Start animation
         self._animate_waveform()

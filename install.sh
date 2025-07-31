@@ -29,11 +29,8 @@ pip install -e .
 
 # Set up systemd service
 echo "Setting up auto-start service..."
-# Remove root-owned directory if it exists and recreate
-if [ -d ~/.config/systemd/user/ ] && [ ! -w ~/.config/systemd/user/ ]; then
-    sudo rm -rf ~/.config/systemd/user/
-fi
-mkdir -p ~/.config/systemd/user/
+# Create systemd directory
+mkdir -p ~/.config/systemd/user/ 2>/dev/null || true
 
 # Create user-specific service file
 cat > ~/.config/systemd/user/prosody.service << 'EOF'
@@ -62,6 +59,7 @@ exec python -m prosody
 EOF
 
 chmod +x ~/.local/bin/prosody
+
 
 # Reload systemd and enable service
 systemctl --user daemon-reload

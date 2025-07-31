@@ -44,37 +44,47 @@ Feature requests are welcome! Please create an issue with:
 
 ### Development Setup
 
+⚠️ **Important for Developers**
+
+The `prosody` command runs your installed version, not your development code. During development, always use `python -m prosody` to test your changes.
+
 1. **Fork and clone the repository**
    ```bash
    git clone https://github.com/yourusername/prosody.git
    cd prosody
    ```
 
-2. **Create a virtual environment**
+2. **Set up development environment**
    ```bash
    python3 -m venv venv
-   source venv/bin/activate  # Linux/Mac
-   ```
-
-3. **Install dependencies**
-   ```bash
-   # Core dependencies
+   source venv/bin/activate
    pip install -r requirements.txt
-   
-   # Development dependencies
    pip install -r requirements-test.txt
-   
-   # Install in editable mode
    pip install -e .
    ```
 
-4. **Verify installation**
+3. **Testing your changes**
    ```bash
+   # Wrong - This runs your installed version
+   prosody
+   
+   # Correct - This runs your development code
+   python -m prosody
+   ```
+
+4. **Development workflow**
+   ```bash
+   # Activate your venv
+   source venv/bin/activate
+   
+   # Make your changes
+   vim src/prosody/main.py
+   
+   # Test your changes
+   python -m prosody
+   
    # Run tests
    pytest
-   
-   # Try the app
-   prosody
    ```
 
 ### Running Tests

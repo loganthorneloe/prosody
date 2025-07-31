@@ -17,32 +17,63 @@ A lightweight, system-wide speech-to-text application for Linux that runs in the
 [![GitHub release](https://img.shields.io/github/release/loganthorneloe/prosody.svg)](https://github.com/loganthorneloe/prosody/releases)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-## 🚀 Quick Start (2 minutes)
+## 🚀 Quick Start
 
-### Option 1: Download Release (Recommended)
+For users who want to use Prosody:
+
+### Option 1: Download Release
 ```bash
 # Download latest release
 wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-1.0.0.tar.gz
 tar -xzf prosody-1.0.0.tar.gz
-cd prosody-1.0.0 && ./install.sh
+cd prosody-1.0.0
+./install.sh
 ```
 
 ### Option 2: Clone from Git
 ```bash
-# Clone and install
 git clone https://github.com/loganthorneloe/prosody.git
-cd prosody && ./install.sh
+cd prosody
+./install.sh
 ```
 
-**That's it!** Run `prosody` to start.
+**Now run it:**
+```bash
+prosody  # This is the command you'll use
+```
 
-### Using Prosody (30 seconds)
+## 🛠️ Development Setup
 
-1. **Run prosody in terminal** (or enable auto-start)
-2. **Double-tap Left Ctrl** - You'll see a waveform at bottom of screen
-3. **Speak clearly** - "Hello, this is a test of Prosody"
-4. **Double-tap Left Ctrl again** - Text appears where your cursor is!
-5. **To cancel:** Double-tap Escape while recording
+For developers who want to contribute or modify the code:
+
+```bash
+# Clone the repo
+git clone https://github.com/loganthorneloe/prosody.git
+cd prosody
+
+# Set up development environment
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+pip install -r requirements-test.txt
+pip install -e .
+
+# Run your development version
+python -m prosody  # Note: Don't use 'prosody' - that runs the installed version
+```
+
+**Important:** When developing, always use `python -m prosody` to test your changes. The `prosody` command will run the installed version, not your development code.
+
+---
+
+## How to Use Prosody
+
+Once running (either `prosody` for users or `python -m prosody` for developers):
+
+1. **Double-tap Left Ctrl** - You'll see a waveform at bottom of screen
+2. **Speak clearly** - "Hello, this is a test of Prosody"
+3. **Double-tap Left Ctrl again** - Text appears where your cursor is!
+4. **To cancel:** Double-tap Escape while recording
 
 ### Running Options
 
@@ -146,19 +177,28 @@ systemctl --user enable prosody
 
 ## Updating Prosody
 
-### From Release
+### Option 1: If you cloned with git
 ```bash
-cd ~/prosody-1.0.0  # or wherever you installed
-git pull            # if cloned, or download new release
-./install.sh        # reinstall with updated code
+cd ~/prosody        # wherever you cloned it
+git pull
+./install.sh        # updates dependencies if needed
 ```
 
-### From Git
+### Option 2: If you downloaded a release
 ```bash
-cd ~/prosody        # your existing clone
-git pull
-./install.sh        # reinstall with updated code
+# Download new version
+wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-X.X.X.tar.gz
+tar -xzf prosody-X.X.X.tar.gz
+cd prosody-X.X.X
+
+# Install (this updates the wrapper to point to the new location)
+./install.sh
+
+# Optional: Remove old version
+rm -rf ~/prosody-1.0.0
 ```
+
+**How it works:** The `prosody` command always runs from wherever you last ran `install.sh`, because the installer saves that location.
 
 ## How It Works
 
@@ -197,23 +237,34 @@ The app runs as a background service, listening for your hotkey. When you double
 
 We love contributions! Whether you're fixing bugs, adding features, or improving documentation, we'd love your help making Prosody better.
 
+### ⚠️ Developer Warning
+
+When developing, remember that the `prosody` command runs the installed version, not your development code. Always use `python -m prosody` to test your changes.
+
 ### Development Setup
 
 ```bash
 # Clone and setup
 git clone https://github.com/loganthorneloe/prosody.git
 cd prosody
+
+# Create virtual environment
 python3 -m venv venv
 source venv/bin/activate
 
-# Install in development mode
+# Install dependencies
 pip install -r requirements.txt
+pip install -r requirements-test.txt
 pip install -e .
 
+# Test YOUR development code
+python -m prosody  # ← THIS IS HOW YOU TEST!
+
 # Run tests
-pip install -r requirements-test.txt
 pytest
 ```
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for full details.
 
 ### Project Structure
 
