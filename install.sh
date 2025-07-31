@@ -3,6 +3,12 @@ set -e
 
 echo "Installing Prosody..."
 
+# Check if we're in a proper graphical session
+if [ -z "$DISPLAY" ]; then
+    echo "⚠️  Warning: No DISPLAY detected. Prosody requires a graphical environment."
+    echo "   If installing over SSH, the app will only work in a desktop session."
+fi
+
 # Check for Python 3
 if ! command -v python3 &> /dev/null; then
     echo "Error: Python 3 is required but not installed"
@@ -32,8 +38,9 @@ echo "Setting up auto-start service..."
 # Create systemd directory
 mkdir -p ~/.config/systemd/user/ 2>/dev/null || true
 
-# Create user-specific service file
-cat > ~/.config/systemd/user/prosody.service << 'EOF'
+# Create user-specific service file (check permissions)
+if [ -w ~/.config/systemd/user/ ]; then
+    cat > ~/.config/systemd/user/prosody.service << 'EOF'
 [Unit]
 Description=Prosody Speech-to-Text Service
 After=graphical-session.target
@@ -48,6 +55,14 @@ Environment="DISPLAY=:0"
 [Install]
 WantedBy=default.target
 EOF
+else
+    echo "Warning: Cannot write to ~/.config/systemd/user/"
+    echo "Auto-start setup skipped. To set up manually later:"
+    echo "  mkdir -p ~/.config/systemd/user/"
+    echo "  cp prosody.service ~/.config/systemd/user/"
+    echo "  systemctl --user daemon-reload"
+    echo "  systemctl --user enable prosody"
+fi
 
 # Create prosody wrapper in ~/.local/bin
 mkdir -p ~/.local/bin
@@ -61,9 +76,16 @@ EOF
 chmod +x ~/.local/bin/prosody
 
 
-# Reload systemd and enable service
-systemctl --user daemon-reload
-systemctl --user enable prosody
+# Reload systemd and enable service (only if systemd is available)
+if command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
+    systemctl --user daemon-reload
+    systemctl --user enable prosody
+else
+    echo ""
+    echo "Note: systemd not available or not in user session."
+    echo "To enable auto-start later, run:"
+    echo "  systemctl --user enable prosody"
+fi
 
 # Check if ~/.local/bin is in PATH
 if [[ ":$PATH:" != *":$HOME/.local/bin:"* ]]; then
@@ -80,9 +102,13 @@ echo ""
 echo "To start Prosody:"
 echo "  prosody                        # Run in foreground"
 echo "  prosody &                      # Run in background"
-echo "  systemctl --user start prosody # Start as service"
-echo ""
-echo "Auto-start is enabled. Prosody will start on your next login."
+if command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
+    echo "  systemctl --user start prosody # Start as service"
+    echo ""
+    echo "Auto-start is enabled. Prosody will start on your next login."
+else
+    echo ""
+fi
 echo ""
 echo "🎤 How to use:"
 echo "  1. Click where you want to type"
