@@ -26,12 +26,15 @@ if [ ! -w "." ]; then
     echo ""
     echo "⚠️  Permission issue detected!"
     echo ""
-    echo "The current directory is not writable. This often happens when extracting"
-    echo "a downloaded tarball. Please fix permissions first:"
+    echo "The extracted files are read-only (this is normal for downloaded releases)."
+    echo "Please fix permissions first:"
     echo ""
     echo "  chmod -R u+w ."
     echo ""
     echo "Then run ./install.sh again."
+    echo ""
+    echo "This happens because release tarballs extract with read-only permissions"
+    echo "for security. The chmod command makes them writable so we can install."
     exit 1
 fi
 

@@ -28,12 +28,14 @@ wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-
 tar -xzf prosody-1.0.0.tar.gz
 cd prosody-1.0.0
 
-# Fix permissions (needed for downloaded releases)
+# IMPORTANT: Fix permissions (downloaded files are read-only by default)
 chmod -R u+w .
 
 # Install
 ./install.sh
 ```
+
+**Note:** The `chmod` step is required because downloaded releases extract with read-only permissions. Without it, the installer will fail with "Permission denied".
 
 ### Option 2: Clone from Git
 ```bash
