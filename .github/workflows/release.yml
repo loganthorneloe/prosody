@@ -36,6 +36,13 @@ jobs:
         fi
         echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
         echo "TAG=$TAG" >> $GITHUB_OUTPUT
+    
+    - name: Create source archive
+      run: |
+        # Create a clean archive without .git directory
+        mkdir -p dist
+        git archive --format=tar.gz --prefix=prosody-${{ steps.version.outputs.VERSION }}/ \
+          -o dist/prosody-${{ steps.version.outputs.VERSION }}.tar.gz HEAD
         
     - name: Create Release
       uses: softprops/action-gh-release@v1
@@ -45,24 +52,26 @@ jobs:
         draft: false
         prerelease: false
         generate_release_notes: true
+        files: |
+          dist/prosody-${{ steps.version.outputs.VERSION }}.tar.gz
         body: |
           ## Installation
           
           ### Quick Install (Recommended)
           ```bash
-          # Clone and install
-          git clone https://github.com/${{ github.repository }}.git
-          cd prosody && ./install.sh
+          # Download and extract
+          wget https://github.com/${{ github.repository }}/releases/download/${{ steps.version.outputs.TAG }}/prosody-${{ steps.version.outputs.VERSION }}.tar.gz
+          tar -xzf prosody-${{ steps.version.outputs.VERSION }}.tar.gz
+          cd prosody-${{ steps.version.outputs.VERSION }}
+          
+          # Install
+          ./install.sh
           ```
           
-          ### Manual Install
+          ### Alternative: Clone from Git
           ```bash
           git clone https://github.com/${{ github.repository }}.git
-          cd prosody
-          python3 -m venv venv
-          source venv/bin/activate
-          pip install -r requirements.txt
-          pip install -e .
+          cd prosody && ./install.sh
           ```
           
           ## Running Prosody

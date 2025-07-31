@@ -19,6 +19,15 @@ A lightweight, system-wide speech-to-text application for Linux that runs in the
 
 ## 🚀 Quick Start (2 minutes)
 
+### Option 1: Download Release (Recommended)
+```bash
+# Download latest release
+wget https://github.com/loganthorneloe/prosody/releases/latest/download/prosody-1.0.0.tar.gz
+tar -xzf prosody-1.0.0.tar.gz
+cd prosody-1.0.0 && ./install.sh
+```
+
+### Option 2: Clone from Git
 ```bash
 # Clone and install
 git clone https://github.com/loganthorneloe/prosody.git
