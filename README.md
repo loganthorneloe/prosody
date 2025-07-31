@@ -263,6 +263,11 @@ The app runs as a background service, listening for your hotkey. When you double
 - Add to ~/.bashrc: `export PATH="$HOME/.local/bin:$PATH"`
 - Then run: `source ~/.bashrc`
 
+### "Cannot create ~/.config/systemd/user/" during install?
+- Your systemd directory is probably owned by root
+- Fix with: `sudo chown -R $USER:$USER ~/.config/systemd`
+- Then run `./install.sh` again
+
 ## Contributing
 
 We love contributions! Whether you're fixing bugs, adding features, or improving documentation, we'd love your help making Prosody better.

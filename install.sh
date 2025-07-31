@@ -54,10 +54,22 @@ pip install -e .
 echo "Setting up auto-start service..."
 SYSTEMD_SETUP_SUCCESS=false
 
-# Try to create systemd directory
-if mkdir -p ~/.config/systemd/user/ 2>/dev/null; then
-    # Create user-specific service file
-    cat > ~/.config/systemd/user/prosody.service << 'EOF'
+# Check if systemd directories exist with wrong ownership
+if [ -d ~/.config/systemd ] && [ ! -w ~/.config/systemd ]; then
+    echo "Warning: ~/.config/systemd exists but is not writable (probably owned by root)"
+    echo "To fix this, run:"
+    echo "  sudo chown -R $USER:$USER ~/.config/systemd"
+    echo ""
+elif [ -d ~/.config/systemd/user ] && [ ! -w ~/.config/systemd/user ]; then
+    echo "Warning: ~/.config/systemd/user exists but is not writable (probably owned by root)"
+    echo "To fix this, run:"
+    echo "  sudo chown -R $USER:$USER ~/.config/systemd"
+    echo ""
+else
+    # Try to create systemd directory
+    if mkdir -p ~/.config/systemd/user/ 2>/dev/null; then
+        # Create user-specific service file
+        cat > ~/.config/systemd/user/prosody.service << 'EOF'
 [Unit]
 Description=Prosody Speech-to-Text Service
 After=graphical-session.target
@@ -72,14 +84,15 @@ Environment="DISPLAY=:0"
 [Install]
 WantedBy=default.target
 EOF
-    SYSTEMD_SETUP_SUCCESS=true
-else
-    echo "Warning: Cannot create ~/.config/systemd/user/"
-    echo "Auto-start setup skipped. To set up manually later:"
-    echo "  mkdir -p ~/.config/systemd/user/"
-    echo "  cp prosody.service ~/.config/systemd/user/"
-    echo "  systemctl --user daemon-reload"
-    echo "  systemctl --user enable prosody"
+        SYSTEMD_SETUP_SUCCESS=true
+    else
+        echo "Warning: Cannot create ~/.config/systemd/user/"
+        echo "Auto-start setup skipped. To set up manually later:"
+        echo "  mkdir -p ~/.config/systemd/user/"
+        echo "  cp prosody.service ~/.config/systemd/user/"
+        echo "  systemctl --user daemon-reload"
+        echo "  systemctl --user enable prosody"
+    fi
 fi
 
 # Create prosody wrapper in ~/.local/bin
