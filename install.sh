@@ -107,18 +107,18 @@ EOF
 chmod +x ~/.local/bin/prosody
 
 
-# Reload systemd and enable service (only if systemd is available AND we created the service file)
+# Reload systemd (only if systemd is available AND we created the service file)
 if [ "$SYSTEMD_SETUP_SUCCESS" = true ] && command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
     systemctl --user daemon-reload
-    systemctl --user enable prosody
+    echo ""
+    echo "Systemd service installed. To enable auto-start:"
+    echo "  systemctl --user enable prosody"
 elif [ "$SYSTEMD_SETUP_SUCCESS" = false ]; then
     echo ""
     echo "Note: systemd service not set up (see warning above)."
 else
     echo ""
     echo "Note: systemd not available or not in user session."
-    echo "To enable auto-start later, run:"
-    echo "  systemctl --user enable prosody"
 fi
 
 # Check if ~/.local/bin is in PATH
@@ -134,12 +134,14 @@ echo ""
 echo "✅ Prosody installed successfully!"
 echo ""
 echo "To start Prosody:"
-echo "  prosody                        # Run in foreground"
-echo "  prosody &                      # Run in background"
+echo "  prosody                                  # Run in foreground"
+echo "  prosody > /dev/null 2>&1 &              # Run in background (silent)"
+echo "  nohup prosody > /dev/null 2>&1 &        # Run in background (survives terminal close)"
 if [ "$SYSTEMD_SETUP_SUCCESS" = true ] && command -v systemctl &> /dev/null && [ -n "$XDG_RUNTIME_DIR" ]; then
-    echo "  systemctl --user start prosody # Start as service"
+    echo "  systemctl --user start prosody           # Start as service"
     echo ""
-    echo "Auto-start is enabled. Prosody will start on your next login."
+    echo "To enable auto-start on login:"
+    echo "  systemctl --user enable prosody"
 else
     echo ""
 fi

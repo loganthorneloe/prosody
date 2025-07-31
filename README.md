@@ -88,15 +88,17 @@ Once running (either `prosody` for users or `python -m prosody` for developers):
 # Run in foreground (see output)
 prosody
 
-# Run in background
-prosody &
+# Run in background (silent)
+prosody > /dev/null 2>&1 &
 
 # Run with nohup (survives terminal close)
-nohup prosody &
+nohup prosody > /dev/null 2>&1 &
+
+# Run as systemd service (cleanest option)
+systemctl --user start prosody
 
 # Enable auto-start on login
 systemctl --user enable prosody
-systemctl --user start prosody
 ```
 
 ## What is Prosody?
