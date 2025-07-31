@@ -18,6 +18,9 @@ from .transcription import Transcriber
 
 # Check if running in development mode
 DEV_MODE = os.environ.get('PROSODY_DEV') == '1' or sys.argv[0].endswith('__main__.py')
+# Suppress output in tests
+if 'pytest' in sys.modules:
+    DEV_MODE = False
 
 
 def log(message: str, important: bool = False):
@@ -32,7 +35,7 @@ class ProsodyApp:
     def __init__(self):
         """Initialize the Prosody application."""
         self.audio_recorder = AudioRecorder()
-        self.transcriber = None  # Initialize later to control timing
+        self.transcriber = Transcriber()  # Initialize transcriber
         self.recording_indicator = RecordingIndicator(
             get_audio_level=self._get_current_audio_level
         )
@@ -163,11 +166,6 @@ class ProsodyApp:
     def _transcribe_and_type(self, audio_data):
         """Transcribe audio and type the result."""
         try:
-            # Check if transcriber is initialized
-            if not self.transcriber:
-                log("Transcriber not ready", important=True)
-                return
-                
             # Transcribe the audio
             text = self.transcriber.transcribe(audio_data)
 
@@ -186,10 +184,6 @@ class ProsodyApp:
         log("Prosody is starting...")
         log("Double-tap Left Ctrl to start/stop recording")
         log("Press Escape to cancel recording")
-
-        # Initialize transcriber (loads model)
-        log("Loading speech recognition model...")
-        self.transcriber = Transcriber()
 
         # Start the hotkey listener
         self.hotkey_listener.start()

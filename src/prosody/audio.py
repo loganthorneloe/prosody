@@ -10,6 +10,9 @@ from typing import Optional, Tuple
 
 # Check if running in development mode
 DEV_MODE = os.environ.get('PROSODY_DEV') == '1' or sys.argv[0].endswith('__main__.py')
+# Suppress output in tests
+if 'pytest' in sys.modules:
+    DEV_MODE = False
 
 
 def log(message: str, important: bool = False):

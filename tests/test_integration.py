@@ -140,7 +140,7 @@ class TestProsodyIntegration(unittest.TestCase):
             # Find the startup notification call
             for call in mock_run.call_args_list:
                 args = call[0][0]
-                if "notify-send" in args and "Ready! Double-tap Ctrl to record" in args:
+                if "notify-send" in args and "Double-tap Ctrl to start recording" in args:
                     break
             else:
                 self.fail("Startup notification not found")
