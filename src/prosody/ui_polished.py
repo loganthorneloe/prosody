@@ -145,9 +145,10 @@ class PolishedWaveformIndicator:
                 self.history[history_index] if history_index < len(self.history) else 0
             )
 
-            # Add some smooth variation
+            # Add some smooth variation - but make sure there's always some movement
             smooth_factor = np.sin(i * np.pi / (num_points - 1))  # Bell curve
-            y = center_y - (level * 12 * smooth_factor)
+            amplitude = max(level * 12, 0.3) * smooth_factor  # Minimum amplitude for visibility
+            y = center_y - amplitude
 
             points.extend([x, y])
 

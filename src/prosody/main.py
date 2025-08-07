@@ -60,6 +60,24 @@ class ProsodyApp:
         """Handle system signals for graceful shutdown."""
         log("\nShutting down Prosody...")
         self.running = False
+        
+        # Show shutdown notification
+        try:
+            subprocess.run(
+                [
+                    "notify-send",
+                    "-i",
+                    "dialog-information",
+                    "-t",
+                    "2000",
+                    "Prosody Stopped",
+                    "Speech-to-text service has been stopped"
+                ],
+                check=False,
+                capture_output=True,
+            )
+        except Exception:
+            pass  # Don't let notification failure prevent shutdown
 
     def _get_current_audio_level(self):
         """Get current audio level for waveform visualization."""
