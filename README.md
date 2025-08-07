@@ -64,22 +64,6 @@ systemctl --user disable prosody
 journalctl --user -u prosody -f
 ```
 
-## Development
-
-```bash
-# Set up development environment
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-pip install -e .
-
-# Run from source
-python -m prosody
-
-# Run tests
-pytest
-```
-
 ## How It Works
 
 Prosody uses OpenAI's Whisper model (base.en, ~140MB) for accurate speech recognition. The model downloads automatically on first use.
