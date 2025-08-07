@@ -1,0 +1,57 @@
+[build-system]
+requires = ["setuptools>=45", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "prosody-stt"
+version = "1.0.0"
+description = "A lightweight speech-to-text application for Linux"
+authors = [{name = "Logan Thorneloe"}]
+license = {text = "MIT"}
+readme = "README.md"
+requires-python = ">=3.8"
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: End Users/Desktop",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Operating System :: POSIX :: Linux",
+]
+dependencies = [
+    "pynput>=1.7.6",
+    "sounddevice>=0.4.6", 
+    "numpy>=1.21.0",
+    "openai-whisper>=20230314",
+    "torch>=1.10.0",
+    "torchaudio>=0.10.0",
+    "numba>=0.56.4",
+    "more-itertools>=8.12.0",
+    "tiktoken>=0.3.1",
+    "pytest>=7.0.0",
+    "pytest-cov>=3.0.0",
+    "pytest-mock>=3.6.0",
+    "pytest-timeout>=2.1.0",
+]
+
+[project.scripts]
+prosody = "prosody.__main__:main"
+
+[project.urls]
+Homepage = "https://github.com/loganthorneloe/prosody"
+Repository = "https://github.com/loganthorneloe/prosody"
+Issues = "https://github.com/loganthorneloe/prosody/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "--cov=src/prosody --cov-report=html --cov-report=term --cov-fail-under=65"
